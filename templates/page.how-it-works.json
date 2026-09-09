@@ -1,0 +1,238 @@
+{
+  "sections": {
+    "intro": {
+      "type": "dr-intro",
+      "settings": {
+        "eyebrow": "How it works",
+        "heading": "Old fence to finished wall.",
+        "heading_size": "h0",
+        "text": "<p>Four steps, and only two of them are yours. Here is what happens to a board between the fence line and your living room.</p>",
+        "content_alignment": "center",
+        "image": "shopify://shop_images/dr-install-hands.jpg",
+        "image_position": "below",
+        "image_width": 100,
+        "image_ratio": 160,
+        "image_caption": "",
+        "color_scheme": "scheme-1",
+        "padding_top": 112,
+        "padding_bottom": 80
+      }
+    },
+    "process": {
+      "type": "dr-process",
+      "blocks": {
+        "reclaim": {
+          "type": "step",
+          "settings": {
+            "icon": "fence",
+            "heading": "Reclaim",
+            "text": "<p>We take fence lines down board by board, by hand. Anything cracked, rotten or too far gone stays on the trailer.</p>"
+          }
+        },
+        "prepare": {
+          "type": "step",
+          "settings": {
+            "icon": "plank",
+            "heading": "Prepare",
+            "text": "<p>Cleaned, treated and kiln dried, then cut to a consistent thickness so the rows sit tight and the wall hangs flat.</p>"
+          }
+        },
+        "peel": {
+          "type": "step",
+          "settings": {
+            "icon": "peel",
+            "heading": "Peel",
+            "text": "<p>Choose Peel &amp; Stick and the adhesive backing goes on in our shop. Pull the liner when you are ready.</p>"
+          }
+        },
+        "stick": {
+          "type": "step",
+          "settings": {
+            "icon": "grid",
+            "heading": "Stick",
+            "text": "<p>Measure, cut where you need to, press. Your wall just got considerably more interesting.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "reclaim",
+        "prepare",
+        "peel",
+        "stick"
+      ],
+      "settings": {
+        "eyebrow": "The process",
+        "heading": "What happens\nto a board.",
+        "heading_size": "h1",
+        "columns_desktop": 2,
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-3",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "peel_stick": {
+      "type": "dr-peel-stick",
+      "blocks": {
+        "peel": {
+          "type": "step",
+          "settings": {
+            "text": "Peel it."
+          }
+        },
+        "place": {
+          "type": "step",
+          "settings": {
+            "text": "Place it."
+          }
+        },
+        "press": {
+          "type": "step",
+          "settings": {
+            "text": "Press it."
+          }
+        }
+      },
+      "block_order": [
+        "peel",
+        "place",
+        "press"
+      ],
+      "settings": {
+        "image_1": "shopify://shop_images/dr-shipping-box.jpg",
+        "image_2": "shopify://shop_images/dr-adhesive-backing.jpg",
+        "image_offset": 80,
+        "eyebrow": "Peel & stick",
+        "heading": "Real wood.\nRidiculously easy.",
+        "heading_size": "h1",
+        "text": "<p>All the character of authentic reclaimed wood without turning your weekend project into a construction project.</p><p>Professional adhesive backing, applied in our shop. Best over clean, flat, primed drywall — and worth testing on a sample first, because a wall painted three times behaves differently to one that never was.</p>",
+        "button_label": "Shop peel & stick",
+        "button_link": "#calculator",
+        "color_scheme": "scheme-4",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "nail_up": {
+      "type": "dr-feature",
+      "settings": {
+        "image": "shopify://shop_images/dr-nail-up-guide.jpg",
+        "image_position": "left",
+        "image_ratio": 130,
+        "image_caption": "",
+        "eyebrow": "Nail-up",
+        "heading": "Straight rows,\nno chalk line.",
+        "heading_size": "h1",
+        "text": "<p>Bare-backed boards with the guide printed on the face — fastener marks and a &frac12;\" overlap line, so each row lands where it should without measuring twice.</p><p>Goes over studs, furring strips or plywood. The permanent one, and the one to pick if the wall will ever take weight.</p>",
+        "content_alignment": "left",
+        "button_label": "Shop nail-up",
+        "button_link": "#calculator",
+        "button_style_secondary": false,
+        "button_label_2": "",
+        "button_link_2": "",
+        "button_style_secondary_2": true,
+        "color_scheme": "scheme-1",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "calculator": {
+      "type": "dr-coverage-calculator",
+      "blocks": {
+        "peel": {
+          "type": "install_option",
+          "settings": {
+            "label": "Peel & stick",
+            "variant_title": "Peel & Stick",
+            "product": "",
+            "coverage": 0,
+            "note": ""
+          }
+        },
+        "nail": {
+          "type": "install_option",
+          "settings": {
+            "label": "Nail-up",
+            "variant_title": "Nail-Up",
+            "product": "",
+            "coverage": 0,
+            "note": ""
+          }
+        },
+        "chevron": {
+          "type": "install_option",
+          "settings": {
+            "label": "Chevron",
+            "variant_title": "Peel & Stick",
+            "product": "",
+            "coverage": 8,
+            "note": "Your overage includes the angled fill pieces that close the open triangles where the chevron meets the ceiling, floor and corners."
+          }
+        }
+      },
+      "block_order": [
+        "peel",
+        "nail",
+        "chevron"
+      ],
+      "settings": {
+        "product": "texas-weathered-natural",
+        "coverage_per_box": 10,
+        "pricing_unit": "per_sqft",
+        "eyebrow": "Coverage calculator",
+        "heading": "How much wood do you need?",
+        "heading_size": "h1",
+        "text": "<p>Enter your wall. We'll handle square footage, waste and boxes.</p>",
+        "walls_label": "Your wall",
+        "add_wall_label": "Add another wall",
+        "waste_label": "Waste allowance",
+        "waste_options": "5, 10, 15",
+        "waste_default": "10",
+        "recommended_label": "Recommended",
+        "install_label": "Installation",
+        "recommend_label": "We recommend",
+        "row_area_label": "Approximately",
+        "row_coverage_label": "Coverage purchased",
+        "row_cost_label": "Estimated product cost",
+        "submit_label": "Shop for this project",
+        "unavailable_text": "This option is currently unavailable.",
+        "footnote": "Shipping and tax calculated at checkout. Wood ships parcel or freight depending on quantity.",
+        "color_scheme": "scheme-2",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "closing": {
+      "type": "dr-feature",
+      "settings": {
+        "image": "",
+        "image_position": "above",
+        "image_ratio": 160,
+        "image_caption": "",
+        "eyebrow": "Still deciding",
+        "heading": "See it before you\ncommit a wall.",
+        "heading_size": "h1",
+        "text": "<p>Photographs flatten reclaimed wood. The grey reads warmer in person and the spread from board to board is wider than one picture shows. Five boards, both backings, first class post.</p>",
+        "content_alignment": "left",
+        "button_label": "Order a sample",
+        "button_link": "/products/the-sample",
+        "button_style_secondary": false,
+        "button_label_2": "Ask us a question",
+        "button_link_2": "/pages/contact",
+        "button_style_secondary_2": true,
+        "color_scheme": "scheme-3",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    }
+  },
+  "order": [
+    "intro",
+    "process",
+    "peel_stick",
+    "nail_up",
+    "calculator",
+    "closing"
+  ]
+}
