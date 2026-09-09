@@ -1,4 +1,6 @@
 {%- liquid
+  assign ink = '30, 27, 24'
+
   assign parallax = section.settings.parallax
   if section.settings.image == blank
     assign parallax = false
@@ -8,20 +10,47 @@
   if parallax
     assign range = section.settings.parallax_intensity
   endif
+
+  # Alphas are emitted as integer percentages, which CSS accepts directly.
+  # Avoids any float-formatting surprise from divided_by.
+  assign overlay = section.settings.overlay_opacity
+  assign gradient = section.settings.overlay_gradient
+  assign gradient_mid = gradient | times: 55 | divided_by: 100
 -%}
 
+{%- comment -%}
+  Every tunable value is written straight into this block against the section
+  id, the way stock Craft does its padding. Nothing depends on a custom
+  property inheriting down from an ancestor.
+{%- endcomment -%}
 {%- style -%}
   #shopify-section-{{ section.id }} .dr-hero {
-    --dr-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
-    --dr-hero-gradient: {{ section.settings.overlay_gradient | divided_by: 100.0 }};
-    --dr-hero-parallax: {{ range }};
-    --dr-hero-footnote-gap: {{ section.settings.footnote_spacing }}px;
-    --dr-hero-min-height: {{ section.settings.height_mobile }}px;
+    min-height: {{ section.settings.height_mobile }}px;
+  }
+
+  #shopify-section-{{ section.id }} .dr-hero__media {
+    top: -{{ range }}%;
+    bottom: -{{ range }}%;
+  }
+
+  #shopify-section-{{ section.id }} .dr-hero__scrim {
+    background:
+      linear-gradient(
+        100deg,
+        rgba({{ ink }}, {{ gradient }}%) 0%,
+        rgba({{ ink }}, {{ gradient_mid }}%) 42%,
+        rgba({{ ink }}, 0%) 78%
+      ),
+      linear-gradient(rgba({{ ink }}, {{ overlay }}%), rgba({{ ink }}, {{ overlay }}%));
+  }
+
+  #shopify-section-{{ section.id }} .dr-hero__footnote {
+    margin-top: {{ section.settings.footnote_spacing }}px;
   }
 
   @media screen and (min-width: 750px) {
     #shopify-section-{{ section.id }} .dr-hero {
-      --dr-hero-min-height: {{ section.settings.height_desktop }}px;
+      min-height: {{ section.settings.height_desktop }}px;
     }
   }
 {%- endstyle -%}
@@ -107,21 +136,21 @@
     position: relative;
     display: flex;
     align-items: center;
-    min-height: var(--dr-hero-min-height, 720px);
+    min-height: 720px;
     overflow: hidden;
-    background-color: rgb(var(--dr-ink));
+    background-color: rgb(30, 27, 24);
   }
 
   /*
-    The media is grown by the parallax range at top and bottom so the drift
-    never exposes an edge. With parallax off the range is 0 and it sits flush.
+    Grown by the parallax range top and bottom (written per section above) so
+    the drift never exposes an edge. With parallax off the offsets are 0.
   */
   .dr-hero__media {
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(-1% * var(--dr-hero-parallax, 0));
-    bottom: calc(-1% * var(--dr-hero-parallax, 0));
+    top: 0;
+    bottom: 0;
   }
 
   .dr-hero[data-parallax='true'] .dr-hero__media {
@@ -135,24 +164,9 @@
     display: block;
   }
 
-  /*
-    Two independent layers so the control means what it says:
-    a flat wash at exactly `overlay_opacity`, plus an optional directional
-    boost on the content side. Both reach zero, so 0% is genuinely no overlay.
-  */
   .dr-hero__scrim {
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(
-        100deg,
-        rgba(var(--dr-ink), var(--dr-hero-gradient, 0)) 0%,
-        rgba(var(--dr-ink), 0) 68%
-      ),
-      linear-gradient(
-        rgba(var(--dr-ink), var(--dr-hero-overlay, 0)),
-        rgba(var(--dr-ink), var(--dr-hero-overlay, 0))
-      );
   }
 
   .dr-hero__inner {
@@ -183,27 +197,42 @@
     justify-content: center;
   }
 
-  /* Hero always sits on imagery, so copy is locked to the light end of the palette */
+  /*
+    Hero copy sits on photography, so it is locked to the light end of the
+    palette and carries a soft shadow. The shadow costs nothing on a dark
+    photo and rescues legibility on a bright or busy one.
+  */
   .dr-hero__heading,
   .dr-hero__subheading {
-    color: rgb(var(--dr-bone));
+    color: rgb(239, 232, 220);
+  }
+
+  .dr-hero__heading {
+    text-shadow: 0 2px 28px rgba(30, 27, 24, 0.55), 0 1px 4px rgba(30, 27, 24, 0.4);
+  }
+
+  .dr-hero__subheading,
+  .dr-hero__eyebrow,
+  .dr-hero__footnote {
+    text-shadow: 0 1px 16px rgba(30, 27, 24, 0.6), 0 1px 3px rgba(30, 27, 24, 0.45);
   }
 
   .dr-hero__eyebrow,
   .dr-hero__footnote {
-    color: rgba(var(--dr-bone), 0.82);
+    color: rgba(239, 232, 220, 0.86);
   }
 
   .dr-hero__footnote {
-    margin: var(--dr-hero-footnote-gap, 24px) 0 0;
+    margin-top: 24px;
+    margin-bottom: 0;
   }
 
   /* Outline CTA reads on imagery rather than on a scheme background */
   .dr-hero .dr-hero__button-outline {
-    --color-secondary-button-text: var(--dr-bone);
+    --color-secondary-button-text: 239, 232, 220;
     background-color: transparent;
-    box-shadow: inset 0 0 0 var(--buttons-border-width) rgb(var(--dr-bone));
-    color: rgb(var(--dr-bone));
+    box-shadow: inset 0 0 0 var(--buttons-border-width) rgb(239, 232, 220);
+    color: rgb(239, 232, 220);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -227,8 +256,8 @@
 {% javascript %}
   /*
     Hero parallax. Drifts the media against the page as the hero crosses the
-    viewport. Reads the scroll position in a rAF frame and only writes a
-    transform, so it stays off the layout path.
+    viewport. Reads layout in a rAF frame and only writes a transform, so it
+    stays off the layout path.
   */
   (function () {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -330,18 +359,18 @@
       "step": 5,
       "unit": "%",
       "label": "Overlay strength",
-      "default": 30,
+      "default": 45,
       "info": "An even wash across the whole image. 0% removes it completely."
     },
     {
       "type": "range",
       "id": "overlay_gradient",
       "min": 0,
-      "max": 60,
+      "max": 70,
       "step": 5,
       "unit": "%",
       "label": "Extra shading behind text",
-      "default": 25,
+      "default": 35,
       "info": "Added on the content side only, fading out toward the far edge."
     },
     {
@@ -444,7 +473,7 @@
       "type": "range",
       "id": "footnote_spacing",
       "min": 0,
-      "max": 64,
+      "max": 80,
       "step": 4,
       "unit": "px",
       "label": "Space above footnote",
