@@ -37,6 +37,7 @@
       "variantId": {{ vid | json }},
       "price": {{ vprice | json }},
       "coverage": {{ cov | json }},
+      "note": {{ block.settings.note | json }},
       "available": {{ vavail | json }}
     }{%- unless forloop.last -%},{%- endunless -%}
   {%- endfor -%}
@@ -333,6 +334,12 @@
           "label": "Coverage per box (sq ft)",
           "default": 0,
           "info": "0 uses the section value above. Set it when this option ships a different box size."
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "info": "Shown under the result when this option is selected."
         }
       ]
     }

@@ -27,6 +27,7 @@ class DRCoverageCalculator extends HTMLElement {
       areaWithWaste: this.querySelector('[data-area-with-waste]'),
       coveragePurchased: this.querySelector('[data-coverage-purchased]'),
       cost: this.querySelector('[data-cost]'),
+      optionNote: this.querySelector('[data-option-note]'),
     };
 
     this.renderInstallOptions();
@@ -67,6 +68,7 @@ class DRCoverageCalculator extends HTMLElement {
         price: parseInt(row.price, 10) || 0,
         /* An option may ship a different box size than the section default */
         coverage: parseFloat(row.coverage) || 0,
+        note: row.note || '',
         available: row.available === true,
       };
     });
@@ -203,6 +205,7 @@ class DRCoverageCalculator extends HTMLElement {
       this.out.areaWithWaste.textContent = dash;
       this.out.coveragePurchased.textContent = dash;
       this.out.cost.textContent = dash;
+      this.showOptionNote(option);
       this.setSubmit(false, option);
       return;
     }
@@ -227,7 +230,18 @@ class DRCoverageCalculator extends HTMLElement {
     if (this.quantityInput) this.quantityInput.value = quantity;
     if (this.variantInput && option) this.variantInput.value = option.variantId;
 
+    this.showOptionNote(option);
+
     this.setSubmit(true, option);
+  }
+
+  /* Some options carry a caveat worth showing, e.g. chevron infill pieces */
+  showOptionNote(option) {
+    const el = this.out.optionNote;
+    if (!el) return;
+    const note = option && option.note ? option.note : '';
+    el.textContent = note;
+    el.hidden = !note;
   }
 
   setSubmit(hasArea, option) {

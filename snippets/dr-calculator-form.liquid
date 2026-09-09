@@ -131,6 +131,8 @@
       <p class="dr-calc__label dr-calc__label--accent">{{ recommend_label | escape }}</p>
       <p class="dr-calc__figure" data-boxes>&mdash;</p>
       <p class="dr-calc__note" data-waste-note></p>
+      {%- comment -%} Filled by JS when the selected option carries a note {%- endcomment -%}
+      <p class="dr-calc__note dr-calc__note--option" data-option-note hidden></p>
     </div>
 
     <dl class="dr-calc__rows">

@@ -18,16 +18,19 @@
           assign vtitle = settings.calc_option_1_variant
           assign source = settings.calc_option_1_product
           assign cov = settings.calc_option_1_coverage
+          assign note = settings.calc_option_1_note
         when 2
           assign label = settings.calc_option_2_label
           assign vtitle = settings.calc_option_2_variant
           assign source = settings.calc_option_2_product
           assign cov = settings.calc_option_2_coverage
+          assign note = settings.calc_option_2_note
         when 3
           assign label = settings.calc_option_3_label
           assign vtitle = settings.calc_option_3_variant
           assign source = settings.calc_option_3_product
           assign cov = settings.calc_option_3_coverage
+          assign note = settings.calc_option_3_note
       endcase
 
       if source == blank
@@ -60,6 +63,7 @@
         "variantId": {{ vid | json }},
         "price": {{ vprice | json }},
         "coverage": {{ cov | json }},
+        "note": {{ note | json }},
         "available": {{ vavail | json }}
       }
       {%- assign wrote = true -%}

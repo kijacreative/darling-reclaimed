@@ -562,3 +562,12 @@ body.dr-modal-open {
     min-height: 100vh;
   }
 }
+
+
+/* Per-option caveat inside the calculator result panel */
+.dr-calc__note--option {
+  color: rgb(var(--dr-taupe));
+  border-left: 2px solid rgba(var(--dr-clay), 0.7);
+  padding-left: 1.2rem;
+  margin-top: 1.4rem;
+}

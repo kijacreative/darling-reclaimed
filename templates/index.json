@@ -308,14 +308,16 @@
           "type": "install_option",
           "settings": {
             "label": "Peel & stick",
-            "variant_title": "Peel & Stick"
+            "variant_title": "Peel & Stick",
+            "note": ""
           }
         },
         "nail": {
           "type": "install_option",
           "settings": {
             "label": "Nail-up",
-            "variant_title": "Nail-Up"
+            "variant_title": "Nail-Up",
+            "note": ""
           }
         },
         "chevron": {
@@ -324,7 +326,8 @@
             "label": "Chevron",
             "variant_title": "Peel & Stick",
             "product": "",
-            "coverage": 8
+            "coverage": 8,
+            "note": "Your overage includes the angled fill pieces that close the open triangles where the chevron meets the ceiling, floor and corners."
           }
         }
       },
@@ -589,13 +592,23 @@
             "variant_title": "",
             "unit_suffix": ""
           }
+        },
+        "infill": {
+          "type": "spec",
+          "settings": {
+            "label": "Triangle fill pieces",
+            "value": "Included in overage",
+            "variant_title": "",
+            "unit_suffix": ""
+          }
         }
       },
       "block_order": [
         "peel",
         "nail",
         "angle",
-        "coverage"
+        "coverage",
+        "infill"
       ],
       "settings": {
         "install_image": "shopify://shop_images/dr-chevron-room.jpg",
@@ -608,7 +621,7 @@
         "eyebrow": "Specialty cut",
         "heading": "Chevron.\nIn original barn red.",
         "heading_size": "h1",
-        "text": "<p>That red is the paint the fence wore for forty years, not a stain we brushed on afterward. We cut each board on a 45 and mirror it down the centre, so the grain runs into itself the whole height of the wall.</p><p>Sorted by tone before it ships, because a chevron only reads properly when the reds sit together.</p>",
+        "text": "<p>That red is the paint the fence wore for forty years, not a stain we brushed on afterward. We cut each board on a 45 and mirror it down the centre, so the grain runs into itself the whole height of the wall.</p><p>A chevron leaves open triangles where it meets the ceiling, the floor and the corners. Your order closes them: every box ships with pre-cut angled fill pieces, counted into the overage so you are not mitring them yourself at the end of a long Saturday.</p><p>Sorted by tone before it ships, because a chevron only reads properly when the reds sit together.</p>",
         "button_label": "Shop chevron",
         "button_link": "#calculator",
         "button_label_2": "Order a sample",
