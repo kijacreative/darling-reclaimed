@@ -1,6 +1,21 @@
+{%- liquid
+  assign parallax = section.settings.parallax
+  if section.settings.image == blank
+    assign parallax = false
+  endif
+
+  assign range = 0
+  if parallax
+    assign range = section.settings.parallax_intensity
+  endif
+-%}
+
 {%- style -%}
   #shopify-section-{{ section.id }} .dr-hero {
     --dr-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --dr-hero-gradient: {{ section.settings.overlay_gradient | divided_by: 100.0 }};
+    --dr-hero-parallax: {{ range }};
+    --dr-hero-footnote-gap: {{ section.settings.footnote_spacing }}px;
     --dr-hero-min-height: {{ section.settings.height_mobile }}px;
   }
 
@@ -11,7 +26,13 @@
   }
 {%- endstyle -%}
 
-<div class="dr-hero color-{{ section.settings.color_scheme }}">
+<div
+  class="dr-hero color-{{ section.settings.color_scheme }}"
+  {% if parallax %}
+    data-parallax="true"
+    data-parallax-range="{{ section.settings.parallax_intensity }}"
+  {% endif %}
+>
   {%- if section.settings.image != blank -%}
     <div class="dr-hero__media">
       {{
@@ -37,7 +58,7 @@
 
       {%- if section.settings.heading != blank -%}
         <h1 class="dr-heading dr-hero__heading {{ section.settings.heading_size }}">
-          {{- section.settings.heading -}}
+          {{- section.settings.heading | escape | newline_to_br -}}
         </h1>
       {%- endif -%}
 
@@ -91,10 +112,20 @@
     background-color: rgb(var(--dr-ink));
   }
 
-  .dr-hero__media,
-  .dr-hero__scrim {
+  /*
+    The media is grown by the parallax range at top and bottom so the drift
+    never exposes an edge. With parallax off the range is 0 and it sits flush.
+  */
+  .dr-hero__media {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    top: calc(-1% * var(--dr-hero-parallax, 0));
+    bottom: calc(-1% * var(--dr-hero-parallax, 0));
+  }
+
+  .dr-hero[data-parallax='true'] .dr-hero__media {
+    will-change: transform;
   }
 
   .dr-hero__image {
@@ -104,14 +135,24 @@
     display: block;
   }
 
-  /* Warm scrim: heavier behind the copy, clearing toward the far edge */
+  /*
+    Two independent layers so the control means what it says:
+    a flat wash at exactly `overlay_opacity`, plus an optional directional
+    boost on the content side. Both reach zero, so 0% is genuinely no overlay.
+  */
   .dr-hero__scrim {
-    background: linear-gradient(
-      100deg,
-      rgba(var(--dr-ink), calc(var(--dr-hero-overlay) + 0.18)) 0%,
-      rgba(var(--dr-ink), var(--dr-hero-overlay)) 45%,
-      rgba(var(--dr-ink), calc(var(--dr-hero-overlay) * 0.45)) 100%
-    );
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        100deg,
+        rgba(var(--dr-ink), var(--dr-hero-gradient, 0)) 0%,
+        rgba(var(--dr-ink), 0) 68%
+      ),
+      linear-gradient(
+        rgba(var(--dr-ink), var(--dr-hero-overlay, 0)),
+        rgba(var(--dr-ink), var(--dr-hero-overlay, 0))
+      );
   }
 
   .dr-hero__inner {
@@ -154,7 +195,7 @@
   }
 
   .dr-hero__footnote {
-    margin: 3.2rem 0 0;
+    margin: var(--dr-hero-footnote-gap, 24px) 0 0;
   }
 
   /* Outline CTA reads on imagery rather than on a scheme background */
@@ -163,6 +204,12 @@
     background-color: transparent;
     box-shadow: inset 0 0 0 var(--buttons-border-width) rgb(var(--dr-bone));
     color: rgb(var(--dr-bone));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dr-hero__media {
+      transform: none !important;
+    }
   }
 
   @media screen and (max-width: 749px) {
@@ -177,6 +224,89 @@
   }
 {% endstylesheet %}
 
+{% javascript %}
+  /*
+    Hero parallax. Drifts the media against the page as the hero crosses the
+    viewport. Reads the scroll position in a rAF frame and only writes a
+    transform, so it stays off the layout path.
+  */
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var heroes = [];
+    var ticking = false;
+
+    function collect() {
+      heroes = Array.prototype.slice.call(
+        document.querySelectorAll('.dr-hero[data-parallax="true"]')
+      );
+    }
+
+    function clear() {
+      heroes.forEach(function (hero) {
+        var media = hero.querySelector('.dr-hero__media');
+        if (media) media.style.transform = '';
+      });
+    }
+
+    function update() {
+      ticking = false;
+      if (reduce.matches) return;
+
+      var vh = window.innerHeight;
+
+      heroes.forEach(function (hero) {
+        var media = hero.querySelector('.dr-hero__media');
+        if (!media) return;
+
+        var rect = hero.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > vh) return;
+
+        var range = parseFloat(hero.getAttribute('data-parallax-range')) || 0;
+        if (!range) return;
+
+        /* 0 as the hero enters from below, 1 as it leaves past the top */
+        var progress = (vh - rect.top) / (vh + rect.height);
+        var shift = (progress - 0.5) * range;
+
+        media.style.transform = 'translate3d(0, ' + shift.toFixed(3) + '%, 0)';
+      });
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    function init() {
+      collect();
+      if (!heroes.length) return;
+      update();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    /* Theme editor re-renders the section on every setting change */
+    document.addEventListener('shopify:section:load', init);
+    document.addEventListener('shopify:section:unload', init);
+
+    if (reduce.addEventListener) {
+      reduce.addEventListener('change', function () {
+        if (reduce.matches) clear();
+        else update();
+      });
+    }
+  })();
+{% endjavascript %}
+
 {% schema %}
 {
   "name": "DR — Hero",
@@ -189,14 +319,55 @@
       "label": "Background image"
     },
     {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
       "type": "range",
       "id": "overlay_opacity",
       "min": 0,
       "max": 90,
       "step": 5,
       "unit": "%",
-      "label": "Image overlay opacity",
-      "default": 45
+      "label": "Overlay strength",
+      "default": 30,
+      "info": "An even wash across the whole image. 0% removes it completely."
+    },
+    {
+      "type": "range",
+      "id": "overlay_gradient",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "label": "Extra shading behind text",
+      "default": 25,
+      "info": "Added on the content side only, fading out toward the far edge."
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "checkbox",
+      "id": "parallax",
+      "label": "Parallax background",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "parallax_intensity",
+      "min": 2,
+      "max": 30,
+      "step": 2,
+      "unit": "%",
+      "label": "Parallax depth",
+      "default": 12,
+      "info": "Ignored when a visitor has reduced motion turned on."
+    },
+    {
+      "type": "header",
+      "content": "Size"
     },
     {
       "type": "range",
@@ -222,18 +393,9 @@
       "type": "select",
       "id": "content_position",
       "options": [
-        {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "right",
-          "label": "Right"
-        }
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
       ],
       "default": "left",
       "label": "Content position"
@@ -249,27 +411,19 @@
       "default": "Reclaimed wood wall paneling"
     },
     {
-      "type": "inline_richtext",
+      "type": "textarea",
       "id": "heading",
       "label": "Heading",
-      "default": "Wood with a past."
+      "default": "Wood with a past.",
+      "info": "Press return for a line break."
     },
     {
       "type": "select",
       "id": "heading_size",
       "options": [
-        {
-          "value": "h1",
-          "label": "Large"
-        },
-        {
-          "value": "h0",
-          "label": "Extra large"
-        },
-        {
-          "value": "hxl",
-          "label": "Huge"
-        }
+        { "value": "h1", "label": "Large" },
+        { "value": "h0", "label": "Extra large" },
+        { "value": "hxl", "label": "Huge" }
       ],
       "default": "h0",
       "label": "Heading size"
@@ -285,6 +439,16 @@
       "id": "footnote",
       "label": "Footnote",
       "default": "Real reclaimed wood. Made in Texas."
+    },
+    {
+      "type": "range",
+      "id": "footnote_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Space above footnote",
+      "default": 24
     },
     {
       "type": "header",
