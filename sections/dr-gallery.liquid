@@ -1,0 +1,599 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-gallery {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  #shopify-section-{{ section.id }} .dr-gallery__frame {
+    padding-bottom: {{ 10000 | divided_by: section.settings.tile_ratio }}%;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .dr-gallery {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+    #shopify-section-{{ section.id }} .dr-gallery__grid {
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, minmax(0, 1fr));
+    }
+
+    #shopify-section-{{ section.id }} .dr-gallery__grid--natural {
+      column-count: {{ section.settings.columns_desktop }};
+    }
+  }
+{%- endstyle -%}
+
+<div class="dr-gallery color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <div class="dr-gallery__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="dr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="dr-heading {{ section.settings.heading_size }}">
+            {{- section.settings.heading | escape | newline_to_br -}}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="dr-prose dr-gallery__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul
+        class="dr-gallery__grid dr-gallery__grid--{{ section.settings.layout }}"
+        role="list"
+        {% if section.settings.enable_lightbox %}data-lightbox{% endif %}
+      >
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            {%- capture caption -%}
+              {{ block.settings.label }}{% if block.settings.label != blank and block.settings.meta != blank %} — {% endif %}{{ block.settings.meta }}
+            {%- endcapture -%}
+
+            <li class="dr-gallery__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.link != blank -%}
+                <a class="dr-gallery__shot" href="{{ block.settings.link }}">
+              {%- elsif section.settings.enable_lightbox -%}
+                <button
+                  class="dr-gallery__shot dr-gallery__shot--zoom"
+                  type="button"
+                  data-lightbox-open
+                  data-full="{{ block.settings.image | image_url: width: 2400 }}"
+                  data-caption="{{ caption | strip | escape }}"
+                >
+              {%- else -%}
+                <div class="dr-gallery__shot">
+              {%- endif -%}
+
+              <div class="dr-gallery__frame{% if section.settings.layout == 'natural' %} dr-gallery__frame--natural{% endif %}">
+                {{
+                  block.settings.image
+                  | image_url: width: 1600
+                  | image_tag:
+                    loading: 'lazy',
+                    sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw',
+                    widths: '400, 550, 750, 1100, 1600',
+                    class: 'dr-gallery__image',
+                    alt: caption
+                }}
+              </div>
+
+              {%- if block.settings.label != blank or block.settings.meta != blank -%}
+                <div class="dr-gallery__caption">
+                  {%- if block.settings.label != blank -%}
+                    <span class="dr-gallery__label">{{ block.settings.label | escape }}</span>
+                  {%- endif -%}
+                  {%- if block.settings.meta != blank -%}
+                    <span class="dr-gallery__meta">{{ block.settings.meta | escape }}</span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.link != blank -%}
+                </a>
+              {%- elsif section.settings.enable_lightbox -%}
+                </button>
+              {%- else -%}
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="dr-actions dr-gallery__actions">
+        <a
+          {% if section.settings.button_link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ section.settings.button_link }}"
+          {% endif %}
+          class="button button--primary"
+        >
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- if section.settings.enable_lightbox -%}
+  <dialog class="dr-lightbox" data-lightbox-dialog aria-label="Enlarged photograph">
+    <button class="dr-lightbox__close" type="button" data-lightbox-close>
+      <span class="visually-hidden">Close</span>
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M4 4l12 12M16 4L4 16" stroke-linecap="round" />
+      </svg>
+    </button>
+    <figure class="dr-lightbox__figure">
+      <img class="dr-lightbox__image" alt="" data-lightbox-image>
+      <figcaption class="dr-lightbox__caption" data-lightbox-caption></figcaption>
+    </figure>
+  </dialog>
+{%- endif -%}
+
+{% stylesheet %}
+  .dr-gallery__intro {
+    margin-bottom: 4.8rem;
+  }
+
+  .dr-gallery__text {
+    max-width: 52ch;
+  }
+
+  .dr-gallery__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3.2rem 2rem;
+  }
+
+  /* Natural heights: multi-column masonry, images keep their own ratio */
+  .dr-gallery__grid--natural {
+    display: block;
+    column-count: 1;
+    column-gap: 2rem;
+  }
+
+  .dr-gallery__grid--natural .dr-gallery__item {
+    break-inside: avoid;
+    margin-bottom: 3.2rem;
+  }
+
+  .dr-gallery__shot {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    color: inherit;
+    text-decoration: none;
+    font: inherit;
+  }
+
+  .dr-gallery__shot--zoom {
+    cursor: zoom-in;
+  }
+
+  .dr-gallery__frame {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 75%;
+    background-color: rgb(var(--dr-greige));
+  }
+
+  .dr-gallery__frame--natural {
+    padding-bottom: 0;
+  }
+
+  .dr-gallery__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--duration-long, 500ms) ease;
+  }
+
+  .dr-gallery__frame--natural .dr-gallery__image {
+    position: static;
+    height: auto;
+  }
+
+  .dr-gallery__shot:hover .dr-gallery__image {
+    transform: scale(1.03);
+  }
+
+  .dr-gallery__caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    align-items: baseline;
+    margin-top: 1.2rem;
+  }
+
+  .dr-gallery__label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .dr-gallery__meta {
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  .dr-gallery__actions {
+    margin-top: 5.6rem;
+  }
+
+  /* Lightbox */
+  .dr-lightbox {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    max-width: min(120rem, calc(100vw - 3rem));
+    max-height: calc(100vh - 3rem);
+    overflow: visible;
+  }
+
+  .dr-lightbox::backdrop {
+    background: rgba(30, 27, 24, 0.88);
+  }
+
+  .dr-lightbox__figure {
+    margin: 0;
+  }
+
+  .dr-lightbox__image {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 12rem);
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .dr-lightbox__caption {
+    margin-top: 1.6rem;
+    text-align: center;
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+    color: rgba(239, 232, 220, 0.82);
+  }
+
+  .dr-lightbox__close {
+    position: absolute;
+    top: -4.8rem;
+    right: 0;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: rgb(239, 232, 220);
+  }
+
+  .dr-lightbox__close svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  body.dr-lightbox-open {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dr-gallery__image {
+      transition: none;
+    }
+
+    .dr-gallery__shot:hover .dr-gallery__image {
+      transform: none;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .dr-gallery__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dr-lightbox__close {
+      top: -4rem;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  /*
+    Gallery lightbox. The dialog `close` event is not reliably delivered, so
+    the body class is synced by watching the open attribute instead.
+  */
+  (function () {
+    function watch(dialog) {
+      if (dialog.__drWatched) return;
+      dialog.__drWatched = true;
+      var sync = function () {
+        var open = dialog.hasAttribute('open');
+        document.body.classList.toggle('dr-lightbox-open', open);
+        if (!open && dialog.__trigger && dialog.__trigger.focus) {
+          dialog.__trigger.focus();
+          dialog.__trigger = null;
+        }
+      };
+      new MutationObserver(sync).observe(dialog, {
+        attributes: true,
+        attributeFilter: ['open'],
+      });
+      sync();
+    }
+
+    function dialogFor(el) {
+      var root = el.closest('.shopify-section') || document;
+      return root.querySelector('[data-lightbox-dialog]');
+    }
+
+    document.addEventListener('click', function (event) {
+      var trigger = event.target.closest('[data-lightbox-open]');
+      if (trigger) {
+        var dialog = dialogFor(trigger);
+        if (!dialog || typeof dialog.showModal !== 'function') return;
+
+        var img = dialog.querySelector('[data-lightbox-image]');
+        var cap = dialog.querySelector('[data-lightbox-caption]');
+        var caption = trigger.getAttribute('data-caption') || '';
+
+        if (img) {
+          img.src = trigger.getAttribute('data-full') || '';
+          img.alt = caption;
+        }
+        if (cap) {
+          cap.textContent = caption;
+          cap.hidden = !caption;
+        }
+
+        watch(dialog);
+        dialog.__trigger = trigger;
+        dialog.showModal();
+        document.body.classList.add('dr-lightbox-open');
+        event.preventDefault();
+        return;
+      }
+
+      if (event.target.closest('[data-lightbox-close]')) {
+        var open = document.querySelector('[data-lightbox-dialog][open]');
+        if (open) {
+          open.close();
+          document.body.classList.remove('dr-lightbox-open');
+        }
+      }
+    });
+
+    /* Backdrop click dismisses */
+    document.addEventListener('mousedown', function (event) {
+      if (event.target.matches('[data-lightbox-dialog][open]')) {
+        event.target.close();
+        document.body.classList.remove('dr-lightbox-open');
+      }
+    });
+
+    document.addEventListener('shopify:section:load', function (event) {
+      var dialog = event.target.querySelector('[data-lightbox-dialog]');
+      if (dialog) watch(dialog);
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "DR — Gallery",
+  "tag": "section",
+  "class": "section dr-section",
+  "max_blocks": 24,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Inspiration"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Walls we've been part of.",
+      "info": "Press return for a line break."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Medium"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h0",
+          "label": "Extra large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "even",
+          "label": "Even grid"
+        },
+        {
+          "value": "natural",
+          "label": "Natural heights"
+        }
+      ],
+      "default": "even",
+      "label": "Layout",
+      "info": "Natural heights keeps each photograph's own proportions."
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "tile_ratio",
+      "min": 60,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "label": "Tile width as % of height",
+      "default": 135,
+      "info": "Even grid only."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_lightbox",
+      "label": "Click to enlarge",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "shot",
+      "name": "Photograph",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "info": "The room or space, e.g. \"Living room\"."
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Detail",
+          "info": "Finish and installation, e.g. \"Texas Weathered Natural · Nail-Up\"."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional. A link replaces click-to-enlarge for this photograph."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Gallery",
+      "blocks": [
+        {
+          "type": "shot"
+        },
+        {
+          "type": "shot"
+        },
+        {
+          "type": "shot"
+        },
+        {
+          "type": "shot"
+        },
+        {
+          "type": "shot"
+        },
+        {
+          "type": "shot"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

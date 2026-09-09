@@ -1,0 +1,190 @@
+{
+  "sections": {
+    "intro": {
+      "type": "dr-intro",
+      "settings": {
+        "eyebrow": "Inspiration",
+        "heading": "Rooms with a past.",
+        "heading_size": "h0",
+        "text": "<p>Every wall below started as a fence line somewhere in Texas. Same wood, same mill — the difference is the room it ended up in.</p>",
+        "content_alignment": "center",
+        "image": "",
+        "image_position": "below",
+        "image_width": 100,
+        "image_ratio": 160,
+        "image_caption": "",
+        "color_scheme": "scheme-1",
+        "padding_top": 112,
+        "padding_bottom": 64
+      }
+    },
+    "gallery": {
+      "type": "dr-gallery",
+      "blocks": {
+        "living": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/dr-living-room.jpg",
+            "label": "Living room",
+            "meta": "Texas Weathered Natural · Nail-Up",
+            "link": ""
+          }
+        },
+        "bar": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/dr-restaurant-bar.jpg",
+            "label": "Bar & booths",
+            "meta": "Texas Weathered Natural · Nail-Up",
+            "link": ""
+          }
+        },
+        "office": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/dr-home-office.jpg",
+            "label": "Home office",
+            "meta": "Texas Weathered Natural · Peel & Stick",
+            "link": ""
+          }
+        },
+        "chevron": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/dr-chevron-room.jpg",
+            "label": "Living room",
+            "meta": "Chevron, barn red · Nail-Up",
+            "link": ""
+          }
+        },
+        "hands": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/dr-install-hands.jpg",
+            "label": "Mid-install",
+            "meta": "Texas Weathered Natural · Peel & Stick",
+            "link": ""
+          }
+        },
+        "commercial": {
+          "type": "shot",
+          "settings": {
+            "image": "shopify://shop_images/dr-planks-commercial.jpg",
+            "label": "Commercial fit-out",
+            "meta": "Texas Weathered Natural, awaiting install",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "living",
+        "bar",
+        "office",
+        "chevron",
+        "hands",
+        "commercial"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "layout": "natural",
+        "columns_desktop": 3,
+        "tile_ratio": 135,
+        "enable_lightbox": true,
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 112
+      }
+    },
+    "shop_by_space": {
+      "type": "dr-shop-by-space",
+      "blocks": {
+        "living": {
+          "type": "space",
+          "settings": {
+            "collection": "",
+            "label": "Living rooms",
+            "image": "shopify://shop_images/dr-living-room.jpg",
+            "link": ""
+          }
+        },
+        "offices": {
+          "type": "space",
+          "settings": {
+            "collection": "",
+            "label": "Offices",
+            "image": "shopify://shop_images/dr-home-office.jpg",
+            "link": ""
+          }
+        },
+        "restaurants": {
+          "type": "space",
+          "settings": {
+            "collection": "",
+            "label": "Restaurants & hospitality",
+            "image": "shopify://shop_images/dr-restaurant-bar.jpg",
+            "link": ""
+          }
+        },
+        "commercial": {
+          "type": "space",
+          "settings": {
+            "collection": "",
+            "label": "Commercial spaces",
+            "image": "shopify://shop_images/dr-planks-commercial.jpg",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "living",
+        "offices",
+        "restaurants",
+        "commercial"
+      ],
+      "settings": {
+        "eyebrow": "Browse",
+        "heading": "Shop by space.",
+        "heading_size": "h1",
+        "columns_desktop": 2,
+        "image_ratio": 135,
+        "color_scheme": "scheme-2",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "closing": {
+      "type": "dr-feature",
+      "settings": {
+        "image": "",
+        "image_position": "above",
+        "image_ratio": 160,
+        "image_caption": "",
+        "eyebrow": "Your turn",
+        "heading": "Work out what\nyour wall needs.",
+        "heading_size": "h1",
+        "text": "<p>Enter the wall, pick an installation, and we'll handle the square footage, the waste and the box count. Or start with a sample if you'd rather see the colour in your own light first.</p>",
+        "content_alignment": "left",
+        "button_label": "Open the calculator",
+        "button_link": "#calculator",
+        "button_style_secondary": false,
+        "button_label_2": "Order a sample",
+        "button_link_2": "/products/the-sample",
+        "button_style_secondary_2": true,
+        "color_scheme": "scheme-3",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    }
+  },
+  "order": [
+    "intro",
+    "gallery",
+    "shop_by_space",
+    "closing"
+  ]
+}
