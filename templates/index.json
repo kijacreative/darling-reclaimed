@@ -1,0 +1,559 @@
+{
+  "sections": {
+    "dr_hero": {
+      "type": "dr-hero",
+      "settings": {
+        "overlay_opacity": 45,
+        "height_desktop": 760,
+        "height_mobile": 560,
+        "content_position": "left",
+        "eyebrow": "Reclaimed wood wall paneling",
+        "heading": "Wood with a past.",
+        "heading_size": "h0",
+        "subheading": "<p>Authentic reclaimed wood, transformed into premium wall paneling for spaces with a little more soul.</p>",
+        "footnote": "Real reclaimed wood. Made in Texas.",
+        "button_label": "Shop wall paneling",
+        "button_link": "#calculator",
+        "button_label_2": "Order samples",
+        "button_link_2": "#calculator",
+        "color_scheme": "scheme-3",
+        "image": "shopify://shop_images/dr-restaurant-bar.jpg"
+      }
+    },
+    "paneling_intro": {
+      "type": "rich-text",
+      "blocks": {
+        "caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Wall paneling",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Reclaim your walls.",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Real wood. Real weathering. No two boards exactly alike.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "caption",
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": true,
+        "padding_top": 100,
+        "padding_bottom": 36
+      }
+    },
+    "featured_finish": {
+      "type": "dr-featured-finish",
+      "blocks": {
+        "peel": {
+          "type": "spec",
+          "settings": {
+            "label": "Peel & Stick",
+            "value": "$10.00 / sq. ft.",
+            "variant_title": "Peel & Stick",
+            "unit_suffix": "/ sq. ft."
+          }
+        },
+        "nail": {
+          "type": "spec",
+          "settings": {
+            "label": "Nail-Up",
+            "value": "$10.00 / sq. ft.",
+            "variant_title": "Nail-Up",
+            "unit_suffix": "/ sq. ft."
+          }
+        },
+        "coverage": {
+          "type": "spec",
+          "settings": {
+            "label": "Coverage per box",
+            "value": "10 sq. ft.",
+            "variant_title": "",
+            "unit_suffix": ""
+          }
+        },
+        "texture": {
+          "type": "spec",
+          "settings": {
+            "label": "Texture",
+            "value": "Saw-marked",
+            "variant_title": "",
+            "unit_suffix": ""
+          }
+        }
+      },
+      "block_order": [
+        "peel",
+        "nail",
+        "coverage",
+        "texture"
+      ],
+      "settings": {
+        "layout": "stacked",
+        "image_ratio": 160,
+        "badge": "Best seller",
+        "eyebrow": "",
+        "heading": "Texas Weathered Natural",
+        "heading_size": "h1",
+        "text": "<p>Naturally weathered reclaimed fence wood with warm brown, silver-gray and sun-aged variations.</p>",
+        "button_label": "Shop this finish",
+        "button_link": "#calculator",
+        "sample_button_label": "Order a sample",
+        "sample_button_link": "#calculator",
+        "color_scheme": "scheme-1",
+        "padding_top": 40,
+        "padding_bottom": 112,
+        "image": "shopify://shop_images/dr-living-room.jpg",
+        "product": "texas-weathered-natural",
+        "sample_product": "the-sample"
+      }
+    },
+    "process": {
+      "type": "dr-process",
+      "blocks": {
+        "reclaim": {
+          "type": "step",
+          "settings": {
+            "icon": "fence",
+            "heading": "Reclaim",
+            "text": "<p>We rescue naturally weathered wood from old fences, barns and structures.</p>"
+          }
+        },
+        "prepare": {
+          "type": "step",
+          "settings": {
+            "icon": "plank",
+            "heading": "Prepare",
+            "text": "<p>Each board is cleaned, treated, kiln dried and precision cut.</p>"
+          }
+        },
+        "peel": {
+          "type": "step",
+          "settings": {
+            "icon": "peel",
+            "heading": "Peel",
+            "text": "<p>Our optional adhesive backing turns real reclaimed wood into a simple peel-and-stick installation.</p>"
+          }
+        },
+        "stick": {
+          "type": "step",
+          "settings": {
+            "icon": "grid",
+            "heading": "Stick",
+            "text": "<p>Measure, cut when necessary, peel and press. Your wall just got considerably more interesting.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "reclaim",
+        "prepare",
+        "peel",
+        "stick"
+      ],
+      "settings": {
+        "eyebrow": "How it works",
+        "heading": "Old fence.\nNew wall.",
+        "heading_size": "h1",
+        "columns_desktop": 2,
+        "button_label": "See the whole process",
+        "button_link": "",
+        "color_scheme": "scheme-3",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "actually_reclaimed": {
+      "type": "dr-feature",
+      "settings": {
+        "image_position": "above",
+        "image_ratio": 160,
+        "image_caption": "",
+        "eyebrow": "Actually reclaimed",
+        "heading": "Not made to look reclaimed.\nActually reclaimed.",
+        "heading_size": "h1",
+        "text": "<p>Those knots, nail holes, sun-faded colors and imperfections aren't printed onto a manufactured board. They happened naturally over years of exposure.</p><p>We preserve the character. You decide where its next chapter goes.</p>",
+        "content_alignment": "left",
+        "button_label": "See it installed",
+        "button_link": "",
+        "button_style_secondary": false,
+        "button_label_2": "",
+        "button_link_2": "",
+        "button_style_secondary_2": true,
+        "color_scheme": "scheme-2",
+        "padding_top": 112,
+        "padding_bottom": 112,
+        "image": "shopify://shop_images/dr-install-hands.jpg"
+      }
+    },
+    "shop_by_space": {
+      "type": "dr-shop-by-space",
+      "blocks": {
+        "living_rooms": {
+          "type": "space",
+          "settings": {
+            "collection": "",
+            "label": "Living rooms",
+            "image": "shopify://shop_images/dr-living-room.jpg",
+            "link": ""
+          }
+        },
+        "offices": {
+          "type": "space",
+          "settings": {
+            "collection": "",
+            "label": "Offices",
+            "image": "shopify://shop_images/dr-home-office.jpg",
+            "link": ""
+          }
+        },
+        "restaurants": {
+          "type": "space",
+          "settings": {
+            "collection": "",
+            "label": "Restaurants & hospitality",
+            "image": "shopify://shop_images/dr-restaurant-bar.jpg",
+            "link": ""
+          }
+        },
+        "commercial": {
+          "type": "space",
+          "settings": {
+            "collection": "",
+            "label": "Commercial spaces",
+            "image": "shopify://shop_images/dr-planks-commercial.jpg",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "living_rooms",
+        "offices",
+        "restaurants",
+        "commercial"
+      ],
+      "settings": {
+        "eyebrow": "Inspiration",
+        "heading": "Shop by space.",
+        "heading_size": "h1",
+        "columns_desktop": 2,
+        "image_ratio": 135,
+        "color_scheme": "scheme-1",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "peel_stick": {
+      "type": "dr-peel-stick",
+      "blocks": {
+        "peel": {
+          "type": "step",
+          "settings": {
+            "text": "Peel it."
+          }
+        },
+        "place": {
+          "type": "step",
+          "settings": {
+            "text": "Place it."
+          }
+        },
+        "press": {
+          "type": "step",
+          "settings": {
+            "text": "Press it."
+          }
+        }
+      },
+      "block_order": [
+        "peel",
+        "place",
+        "press"
+      ],
+      "settings": {
+        "image_offset": 80,
+        "eyebrow": "Peel & stick",
+        "heading": "Real wood.\nRidiculously easy.",
+        "heading_size": "h1",
+        "text": "<p>All the character of authentic reclaimed wood without turning your weekend project into a construction project.</p><p>Our Peel &amp; Stick collection arrives prepared with professional adhesive backing.</p>",
+        "button_label": "Shop peel & stick",
+        "button_link": "#calculator",
+        "color_scheme": "scheme-4",
+        "padding_top": 112,
+        "padding_bottom": 112,
+        "image_1": "shopify://shop_images/dr-shipping-box.jpg",
+        "image_2": "shopify://shop_images/dr-adhesive-backing.jpg"
+      }
+    },
+    "calculator": {
+      "type": "dr-coverage-calculator",
+      "blocks": {
+        "peel": {
+          "type": "install_option",
+          "settings": {
+            "label": "Peel & stick",
+            "variant_title": "Peel & Stick"
+          }
+        },
+        "nail": {
+          "type": "install_option",
+          "settings": {
+            "label": "Nail-up",
+            "variant_title": "Nail-Up"
+          }
+        }
+      },
+      "block_order": [
+        "peel",
+        "nail"
+      ],
+      "settings": {
+        "coverage_per_box": 10,
+        "pricing_unit": "per_sqft",
+        "eyebrow": "Coverage calculator",
+        "heading": "How much wood do you need?",
+        "heading_size": "h1",
+        "text": "<p>Enter your wall. We'll handle square footage, waste and boxes.</p>",
+        "walls_label": "Your wall",
+        "add_wall_label": "Add another wall",
+        "waste_label": "Waste allowance",
+        "waste_options": "5, 10, 15",
+        "waste_default": "10",
+        "recommended_label": "Recommended",
+        "install_label": "Installation",
+        "recommend_label": "We recommend",
+        "row_area_label": "Approximately",
+        "row_coverage_label": "Coverage purchased",
+        "row_cost_label": "Estimated product cost",
+        "submit_label": "Shop for this project",
+        "unavailable_text": "This option is currently unavailable.",
+        "footnote": "Shipping and tax calculated at checkout. Wood ships parcel or freight depending on quantity.",
+        "color_scheme": "scheme-1",
+        "padding_top": 112,
+        "padding_bottom": 112,
+        "product": "texas-weathered-natural"
+      }
+    },
+    "our_story": {
+      "type": "rich-text",
+      "blocks": {
+        "caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Our story",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Reclaiming wood,<br>time & purpose.",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Darling Reclaimed started with an old idea, a new workshop and a family willing to bet on building something of their own.</p><p>For Nick and Erin Darling, reclaiming wood became about more than saving old material. It became a way to reclaim time, creativity and purpose.</p><p>Today, we rescue materials that would otherwise disappear and give them another chance to become something worth keeping.</p>"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Read our story",
+            "button_link": "",
+            "button_style_secondary": true,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "caption",
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "desktop_content_position": "left",
+        "content_alignment": "left",
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "salvage": {
+      "type": "dr-feature",
+      "settings": {
+        "image_position": "below",
+        "image_ratio": 190,
+        "image_caption": "Old Texas fence line before deconstruction",
+        "eyebrow": "Salvage services",
+        "heading": "Before we sell it,\nwe have to save it.",
+        "heading_size": "h1",
+        "text": "<p>Old fence coming down? Barn past its prime? Historic trim being replaced?</p><p>Darling Reclaimed provides selective salvage and delicate deconstruction services designed to recover valuable materials before they end up in a landfill.</p>",
+        "content_alignment": "left",
+        "button_label": "Explore salvage services",
+        "button_link": "",
+        "button_style_secondary": false,
+        "button_label_2": "Tell us about a structure",
+        "button_link_2": "",
+        "button_style_secondary_2": true,
+        "color_scheme": "scheme-3",
+        "padding_top": 112,
+        "padding_bottom": 0,
+        "image": "shopify://shop_images/dr-workshop-bench.jpg"
+      }
+    },
+    "trade": {
+      "type": "dr-trade",
+      "blocks": {
+        "b0": {
+          "type": "benefit",
+          "settings": {
+            "text": "Trade pricing",
+            "link": ""
+          }
+        },
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "text": "Samples",
+            "link": ""
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "text": "Custom quantities",
+            "link": ""
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "text": "Custom milling",
+            "link": ""
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "text": "Material sourcing",
+            "link": ""
+          }
+        },
+        "b5": {
+          "type": "benefit",
+          "settings": {
+            "text": "Commercial orders",
+            "link": ""
+          }
+        },
+        "b6": {
+          "type": "benefit",
+          "settings": {
+            "text": "Custom finishes",
+            "link": ""
+          }
+        },
+        "b7": {
+          "type": "benefit",
+          "settings": {
+            "text": "Project consultation",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7"
+      ],
+      "settings": {
+        "eyebrow": "Trade program",
+        "heading": "Built for designers.\nAnd builders.",
+        "heading_size": "h1",
+        "text": "<p>Specification support, trade pricing and material sourcing for residential and commercial projects.</p>",
+        "columns_desktop": 2,
+        "button_label": "Join the trade program",
+        "button_link": "",
+        "color_scheme": "scheme-1",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "The good stuff gets reclaimed fast.",
+            "heading_size": "h2"
+          }
+        },
+        "paragraph": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>New wood drops, limited finishes, projects and occasionally something we probably should have kept for ourselves.</p>"
+          }
+        },
+        "form": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph",
+        "form"
+      ],
+      "settings": {
+        "color_scheme": "scheme-3",
+        "full_width": true,
+        "padding_top": 88,
+        "padding_bottom": 88,
+        "content_alignment": "left"
+      }
+    }
+  },
+  "order": [
+    "dr_hero",
+    "paneling_intro",
+    "featured_finish",
+    "process",
+    "actually_reclaimed",
+    "shop_by_space",
+    "peel_stick",
+    "calculator",
+    "our_story",
+    "salvage",
+    "trade",
+    "newsletter"
+  ]
+}

@@ -1,0 +1,336 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-hero {
+    --dr-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --dr-hero-min-height: {{ section.settings.height_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .dr-hero {
+      --dr-hero-min-height: {{ section.settings.height_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="dr-hero color-{{ section.settings.color_scheme }}">
+  {%- if section.settings.image != blank -%}
+    <div class="dr-hero__media">
+      {{
+        section.settings.image
+        | image_url: width: 3840
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '750, 1100, 1500, 1780, 2000, 2500, 3000, 3840',
+          class: 'dr-hero__image'
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="dr-hero__scrim" aria-hidden="true"></div>
+
+  <div class="page-width dr-hero__inner dr-hero__inner--{{ section.settings.content_position }}">
+    <div class="dr-hero__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="dr-eyebrow dr-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="dr-heading dr-hero__heading {{ section.settings.heading_size }}">
+          {{- section.settings.heading -}}
+        </h1>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <div class="dr-prose dr-hero__subheading dr-measure">{{ section.settings.subheading }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+        <div class="dr-actions">
+          {%- if section.settings.button_label != blank -%}
+            <a
+              {% if section.settings.button_link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ section.settings.button_link }}"
+              {% endif %}
+              class="button button--primary"
+            >
+              {{- section.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.button_label_2 != blank -%}
+            <a
+              {% if section.settings.button_link_2 == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ section.settings.button_link_2 }}"
+              {% endif %}
+              class="button button--secondary dr-hero__button-outline"
+            >
+              {{- section.settings.button_label_2 | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.footnote != blank -%}
+        <p class="dr-eyebrow dr-hero__footnote">{{ section.settings.footnote | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .dr-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: var(--dr-hero-min-height, 720px);
+    overflow: hidden;
+    background-color: rgb(var(--dr-ink));
+  }
+
+  .dr-hero__media,
+  .dr-hero__scrim {
+    position: absolute;
+    inset: 0;
+  }
+
+  .dr-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Warm scrim: heavier behind the copy, clearing toward the far edge */
+  .dr-hero__scrim {
+    background: linear-gradient(
+      100deg,
+      rgba(var(--dr-ink), calc(var(--dr-hero-overlay) + 0.18)) 0%,
+      rgba(var(--dr-ink), var(--dr-hero-overlay)) 45%,
+      rgba(var(--dr-ink), calc(var(--dr-hero-overlay) * 0.45)) 100%
+    );
+  }
+
+  .dr-hero__inner {
+    position: relative;
+    width: 100%;
+    display: flex;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+
+  .dr-hero__inner--left { justify-content: flex-start; }
+  .dr-hero__inner--center { justify-content: center; }
+  .dr-hero__inner--right { justify-content: flex-end; }
+
+  .dr-hero__content {
+    max-width: 62rem;
+  }
+
+  .dr-hero__inner--center .dr-hero__content {
+    text-align: center;
+  }
+
+  .dr-hero__inner--center .dr-hero__subheading {
+    margin-inline: auto;
+  }
+
+  .dr-hero__inner--center .dr-actions {
+    justify-content: center;
+  }
+
+  /* Hero always sits on imagery, so copy is locked to the light end of the palette */
+  .dr-hero__heading,
+  .dr-hero__subheading {
+    color: rgb(var(--dr-bone));
+  }
+
+  .dr-hero__eyebrow,
+  .dr-hero__footnote {
+    color: rgba(var(--dr-bone), 0.82);
+  }
+
+  .dr-hero__footnote {
+    margin: 3.2rem 0 0;
+  }
+
+  /* Outline CTA reads on imagery rather than on a scheme background */
+  .dr-hero .dr-hero__button-outline {
+    --color-secondary-button-text: var(--dr-bone);
+    background-color: transparent;
+    box-shadow: inset 0 0 0 var(--buttons-border-width) rgb(var(--dr-bone));
+    color: rgb(var(--dr-bone));
+  }
+
+  @media screen and (max-width: 749px) {
+    .dr-hero__inner {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
+
+    .dr-hero__content {
+      max-width: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "DR — Hero",
+  "tag": "section",
+  "class": "section dr-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Image overlay opacity",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "min": 400,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 760
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 300,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Mobile height",
+      "default": 560
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Content position"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Reclaimed wood wall paneling"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Wood with a past."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h0",
+          "label": "Extra large"
+        },
+        {
+          "value": "hxl",
+          "label": "Huge"
+        }
+      ],
+      "default": "h0",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Authentic reclaimed wood, transformed into premium wall paneling for spaces with a little more soul.</p>"
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "Footnote",
+      "default": "Real reclaimed wood. Made in Texas."
+    },
+    {
+      "type": "header",
+      "content": "Primary button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label",
+      "default": "Shop wall paneling"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Secondary button"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Label",
+      "default": "Order samples"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3"
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Hero"
+    }
+  ]
+}
+{% endschema %}

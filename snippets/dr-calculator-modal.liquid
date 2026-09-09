@@ -1,0 +1,99 @@
+{%- comment -%}
+  Global ordering calculator, rendered once per page in theme.liquid.
+  Any link to #calculator, or any element with [data-dr-calc-open], opens it.
+  Configured from Theme settings → Ordering calculator.
+{%- endcomment -%}
+
+{%- liquid
+  assign product = settings.calc_product
+  assign o1 = settings.calc_option_1_variant
+  assign o2 = settings.calc_option_2_variant
+-%}
+
+{%- capture options_json -%}
+[
+  {%- assign wrote = false -%}
+  {%- if settings.calc_option_1_label != blank -%}
+    {%- liquid
+      assign v1id = ''
+      assign v1price = 0
+      assign v1avail = false
+      if product != blank and o1 != blank
+        for variant in product.variants
+          if variant.title == o1
+            assign v1id = variant.id
+            assign v1price = variant.price
+            assign v1avail = variant.available
+            break
+          endif
+        endfor
+      endif
+      assign wrote = true
+    -%}
+    {
+      "id": "opt1",
+      "label": {{ settings.calc_option_1_label | json }},
+      "variantId": {{ v1id | json }},
+      "price": {{ v1price | json }},
+      "available": {{ v1avail | json }}
+    }
+  {%- endif -%}
+  {%- if settings.calc_option_2_label != blank -%}
+    {%- liquid
+      assign v2id = ''
+      assign v2price = 0
+      assign v2avail = false
+      if product != blank and o2 != blank
+        for variant in product.variants
+          if variant.title == o2
+            assign v2id = variant.id
+            assign v2price = variant.price
+            assign v2avail = variant.available
+            break
+          endif
+        endfor
+      endif
+    -%}
+    {%- if wrote -%},{%- endif -%}
+    {
+      "id": "opt2",
+      "label": {{ settings.calc_option_2_label | json }},
+      "variantId": {{ v2id | json }},
+      "price": {{ v2price | json }},
+      "available": {{ v2avail | json }}
+    }
+  {%- endif -%}
+]
+{%- endcapture -%}
+
+<dialog class="dr-modal" id="dr-calculator-modal" aria-labelledby="dr-modal-title">
+  <div class="dr-modal__inner color-scheme-1">
+    <button class="dr-modal__close" type="button" data-dr-calc-close>
+      <span class="visually-hidden">Close</span>
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M4 4l12 12M16 4L4 16" stroke-linecap="round" />
+      </svg>
+    </button>
+
+    <div class="dr-modal__head">
+      {%- if settings.calc_eyebrow != blank -%}
+        <p class="dr-eyebrow">{{ settings.calc_eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="dr-heading h2" id="dr-modal-title">
+        {{- settings.calc_heading | default: 'How much wood do you need?' -}}
+      </h2>
+      {%- if settings.calc_text != blank -%}
+        <div class="dr-prose dr-calc__text">{{ settings.calc_text }}</div>
+      {%- endif -%}
+    </div>
+
+    {% render 'dr-calculator-form',
+      uid: 'modal',
+      coverage: settings.calc_coverage_per_box,
+      unit: settings.calc_pricing_unit,
+      options_json: options_json,
+      submit_label: settings.calc_submit_label,
+      footnote: settings.calc_footnote
+    %}
+  </div>
+</dialog>

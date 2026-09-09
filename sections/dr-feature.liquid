@@ -1,0 +1,352 @@
+{%- comment -%}
+  Flexible editorial block: eyebrow, heading, prose and up to two buttons,
+  with optional media placed above, below, or beside the copy.
+{%- endcomment -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-feature {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    --dr-feature-ratio: {{ section.settings.image_ratio | divided_by: 100.0 }};
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .dr-feature {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign position = section.settings.image_position
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
+-%}
+
+<div class="dr-feature color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div
+      class="dr-feature__layout dr-feature__layout--{{ position }}{% if has_image == false %} dr-feature__layout--no-media{% endif %}"
+    >
+      {%- if has_image -%}
+        <div class="dr-feature__media">
+          <div class="dr-feature__frame">
+            {{
+              section.settings.image
+              | image_url: width: 2400
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 990px) 1400px, 100vw',
+                widths: '550, 750, 1100, 1500, 2000, 2400',
+                class: 'dr-feature__image'
+            }}
+          </div>
+          {%- if section.settings.image_caption != blank -%}
+            <p class="dr-feature__caption">{{ section.settings.image_caption | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="dr-feature__content dr-feature__content--{{ section.settings.content_alignment }}">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="dr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="dr-heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape | newline_to_br }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.text != blank -%}
+          <div class="dr-prose dr-feature__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+          <div class="dr-actions">
+            {%- if section.settings.button_label != blank -%}
+              <a
+                {% if section.settings.button_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ section.settings.button_link }}"
+                {% endif %}
+                class="button{% if section.settings.button_style_secondary %} button--secondary{% else %} button--primary{% endif %}"
+              >
+                {{- section.settings.button_label | escape -}}
+              </a>
+            {%- endif -%}
+
+            {%- if section.settings.button_label_2 != blank -%}
+              <a
+                {% if section.settings.button_link_2 == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ section.settings.button_link_2 }}"
+                {% endif %}
+                class="button{% if section.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
+              >
+                {{- section.settings.button_label_2 | escape -}}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .dr-feature__layout {
+    display: grid;
+    gap: 4rem;
+  }
+
+  .dr-feature__layout--below .dr-feature__media {
+    order: 2;
+  }
+
+  .dr-feature__frame {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: calc(100% / var(--dr-feature-ratio, 1.6));
+    background-color: rgb(var(--dr-greige));
+  }
+
+  .dr-feature__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .dr-feature__caption {
+    margin: 1.2rem 0 0;
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  .dr-feature__text {
+    max-width: 56ch;
+  }
+
+  .dr-feature__content--center {
+    text-align: center;
+  }
+
+  .dr-feature__content--center .dr-feature__text {
+    margin-inline: auto;
+  }
+
+  .dr-feature__content--center .dr-actions {
+    justify-content: center;
+  }
+
+  @media screen and (min-width: 990px) {
+    .dr-feature__layout--left,
+    .dr-feature__layout--right {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 6rem;
+    }
+
+    .dr-feature__layout--right .dr-feature__media {
+      order: 2;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "DR — Feature",
+  "tag": "section",
+  "class": "section dr-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "options": [
+        {
+          "value": "above",
+          "label": "Above content"
+        },
+        {
+          "value": "below",
+          "label": "Below content"
+        },
+        {
+          "value": "left",
+          "label": "Left of content"
+        },
+        {
+          "value": "right",
+          "label": "Right of content"
+        }
+      ],
+      "default": "above",
+      "label": "Image position"
+    },
+    {
+      "type": "range",
+      "id": "image_ratio",
+      "min": 60,
+      "max": 240,
+      "step": 10,
+      "label": "Image width as % of height",
+      "default": 160,
+      "unit": "%"
+    },
+    {
+      "type": "text",
+      "id": "image_caption",
+      "label": "Image caption"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Medium"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h0",
+          "label": "Extra large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left",
+      "label": "Content alignment"
+    },
+    {
+      "type": "header",
+      "content": "First button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary",
+      "label": "Use outline style",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Second button"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary_2",
+      "label": "Use outline style",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Feature"
+    }
+  ]
+}
+{% endschema %}

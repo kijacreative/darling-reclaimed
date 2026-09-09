@@ -1,0 +1,334 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-spaces {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .dr-spaces {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+      --dr-spaces-columns: {{ section.settings.columns_desktop }};
+    }
+  }
+
+  #shopify-section-{{ section.id }} .dr-spaces {
+    --dr-spaces-ratio: {{ section.settings.image_ratio | divided_by: 100.0 }};
+  }
+{%- endstyle -%}
+
+<div class="dr-spaces color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="dr-spaces__intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="dr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="dr-heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="dr-spaces__grid" role="list">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign collection = block.settings.collection
+
+            assign label = block.settings.label
+            if label == blank and collection != blank
+              assign label = collection.title
+            endif
+
+            assign image = block.settings.image
+            if image == blank and collection != blank
+              assign image = collection.featured_image
+            endif
+
+            assign url = block.settings.link
+            if url == blank and collection != blank
+              assign url = collection.url
+            endif
+          -%}
+
+          <li
+            class="dr-spaces__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {{ block.shopify_attributes }}
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            {%- if url != blank -%}
+              <a class="dr-spaces__card" href="{{ url }}">
+            {%- else -%}
+              <div class="dr-spaces__card dr-spaces__card--static">
+            {%- endif -%}
+
+            <div class="dr-spaces__media">
+              {%- if image != blank -%}
+                {{
+                  image
+                  | image_url: width: 1600
+                  | image_tag:
+                    loading: 'lazy',
+                    sizes: '(min-width: 990px) 45vw, (min-width: 750px) 45vw, 100vw',
+                    widths: '400, 550, 750, 1100, 1600',
+                    class: 'dr-spaces__image',
+                    alt: label
+                }}
+              {%- else -%}
+                <div class="dr-spaces__placeholder" aria-hidden="true"></div>
+              {%- endif -%}
+              <div class="dr-spaces__scrim" aria-hidden="true"></div>
+            </div>
+
+            {%- if label != blank -%}
+              <span class="dr-spaces__label">{{ label | escape }}</span>
+            {%- endif -%}
+
+            {%- if url != blank -%}
+              </a>
+            {%- else -%}
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .dr-spaces__intro {
+    margin-bottom: 4rem;
+  }
+
+  .dr-spaces__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--dr-spaces-columns, 1), minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .dr-spaces__card {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    color: rgb(var(--dr-bone));
+  }
+
+  .dr-spaces__media {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: calc(100% / var(--dr-spaces-ratio, 1.35));
+    background-color: rgb(var(--dr-greige));
+  }
+
+  .dr-spaces__image,
+  .dr-spaces__placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .dr-spaces__placeholder {
+    background-color: rgb(var(--dr-greige));
+  }
+
+  /* Bottom scrim so the overlaid label stays legible on any photo */
+  .dr-spaces__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(var(--dr-ink), 0.72) 0%,
+      rgba(var(--dr-ink), 0.28) 34%,
+      rgba(var(--dr-ink), 0) 62%
+    );
+  }
+
+  .dr-spaces__label {
+    position: absolute;
+    left: 2rem;
+    bottom: 1.8rem;
+    right: 2rem;
+    color: rgb(var(--dr-bone));
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .dr-spaces__card:hover .dr-spaces__image {
+    transform: scale(1.03);
+  }
+
+  .dr-spaces__image {
+    transition: transform var(--duration-long, 500ms) ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dr-spaces__image {
+      transition: none;
+    }
+
+    .dr-spaces__card:hover .dr-spaces__image {
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "DR — Shop by space",
+  "tag": "section",
+  "class": "section dr-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Inspiration"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by space."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Medium"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h0",
+          "label": "Extra large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "image_ratio",
+      "min": 80,
+      "max": 200,
+      "step": 5,
+      "label": "Image width as % of height",
+      "default": 135,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "space",
+      "name": "Space",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Supplies the label, image and link unless overridden below."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Shop by space",
+      "blocks": [
+        {
+          "type": "space"
+        },
+        {
+          "type": "space"
+        },
+        {
+          "type": "space"
+        },
+        {
+          "type": "space"
+        },
+        {
+          "type": "space"
+        },
+        {
+          "type": "space"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,244 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-intro {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    --dr-intro-ratio: {{ section.settings.image_ratio | divided_by: 100.0 }};
+    --dr-intro-image-width: {{ section.settings.image_width }}%;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .dr-intro {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="dr-intro color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="dr-intro__inner dr-intro__inner--{{ section.settings.content_alignment }}">
+      <div class="dr-intro__copy">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="dr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="dr-heading {{ section.settings.heading_size }}">
+            {{- section.settings.heading -}}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.text != blank -%}
+          <div class="dr-prose dr-intro__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.image != blank -%}
+        <div class="dr-intro__media dr-intro__media--{{ section.settings.image_position }}">
+          <div class="dr-intro__frame">
+            {{
+              section.settings.image
+              | image_url: width: 2400
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 990px) 1400px, 100vw',
+                widths: '550, 750, 1100, 1500, 2000, 2400',
+                class: 'dr-intro__image'
+            }}
+          </div>
+          {%- if section.settings.image_caption != blank -%}
+            <p class="dr-intro__caption">{{ section.settings.image_caption | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .dr-intro__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .dr-intro__inner--center {
+    text-align: center;
+  }
+
+  .dr-intro__inner--center .dr-intro__text {
+    margin-inline: auto;
+  }
+
+  .dr-intro__text {
+    max-width: 54ch;
+  }
+
+  .dr-intro .dr-heading {
+    margin-bottom: 1.6rem;
+  }
+
+  .dr-intro .dr-heading:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Media */
+  .dr-intro__media {
+    width: 100%;
+    max-width: var(--dr-intro-image-width, 100%);
+  }
+
+  .dr-intro__media--above {
+    order: -1;
+  }
+
+  .dr-intro__inner--center .dr-intro__media {
+    margin-inline: auto;
+  }
+
+  .dr-intro__frame {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: calc(100% / var(--dr-intro-ratio, 1.6));
+    background-color: rgb(var(--dr-greige));
+  }
+
+  .dr-intro__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .dr-intro__caption {
+    margin: 1.2rem 0 0;
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "DR — Section intro",
+  "tag": "section",
+  "class": "section dr-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Wall paneling"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Reclaim your walls."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "Medium" },
+        { "value": "h1", "label": "Large" },
+        { "value": "h0", "label": "Extra large" }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Real wood. Real weathering. No two boards exactly alike.</p>"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center",
+      "label": "Content alignment"
+    },
+    { "type": "header", "content": "Image" },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Optional. Leave empty for a text-only intro."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "options": [
+        { "value": "below", "label": "Below content" },
+        { "value": "above", "label": "Above content" }
+      ],
+      "default": "below",
+      "label": "Image position"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image width",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "image_ratio",
+      "min": 60,
+      "max": 240,
+      "step": 10,
+      "unit": "%",
+      "label": "Image width as % of height",
+      "default": 160
+    },
+    {
+      "type": "text",
+      "id": "image_caption",
+      "label": "Image caption"
+    },
+    { "type": "header", "content": "Colors" },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    { "type": "header", "content": "Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Section intro"
+    }
+  ]
+}
+{% endschema %}

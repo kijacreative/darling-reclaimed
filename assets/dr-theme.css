@@ -1,0 +1,564 @@
+/*
+  Darling Reclaimed — design layer over Craft.
+  Palette and type sampled from the approved comp (Darling Reclaimed.pdf).
+
+  Headings render in Jost; the theme font pickers are both set to Montserrat
+  (guaranteed present in Shopify's font library) and the heading family is
+  overridden here, so the theme imports cleanly regardless of whether Jost
+  is offered by the picker.
+*/
+
+:root {
+  /* Brand palette */
+  --dr-bone: 239, 232, 220; /* #EFE8DC */
+  --dr-offwhite: 255, 253, 249; /* #FFFDF9 */
+  --dr-ink: 30, 27, 24; /* #1E1B18 */
+  --dr-greige: 221, 212, 202; /* #DDD4CA */
+  --dr-clay: 197, 123, 87; /* #C57B57 */
+  --dr-rust: 166, 96, 68; /* #A66044 */
+  --dr-cocoa: 91, 58, 41; /* #5B3A29 */
+  --dr-taupe: 166, 140, 119; /* #A68C77 */
+  --dr-body-ink: 43, 39, 35; /* #2B2723 */
+
+  /* Eyebrow + body defaults (light sections) */
+  --dr-eyebrow: var(--dr-rust);
+  --dr-body: var(--dr-body-ink);
+
+  --font-heading-family: 'Jost', 'Futura', 'Century Gothic', var(--font-body-family);
+  --font-heading-weight: 400;
+
+  --dr-rule: rgba(var(--dr-ink), 0.14);
+}
+
+/* Dark sections flip the eyebrow and body copy to warm taupe */
+.color-scheme-3 {
+  --dr-eyebrow: var(--dr-taupe);
+  --dr-body: var(--dr-taupe);
+  --dr-rule: rgba(var(--dr-bone), 0.16);
+}
+
+/* ---------- Type ---------- */
+
+h1,
+h2,
+h3,
+h4,
+.h0,
+.h1,
+.h2,
+.h3,
+.h4,
+.hxl {
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  line-height: 1.06;
+  color: rgb(var(--color-foreground));
+}
+
+.hxl,
+.h0 {
+  line-height: 1.02;
+}
+
+/* Body copy sits darker than Craft's default 75% foreground */
+body {
+  color: rgb(var(--dr-body));
+}
+
+.rich-text__text,
+.image-with-text__text,
+.dr-prose {
+  color: rgb(var(--dr-body));
+  font-size: 1.6rem;
+  line-height: 1.65;
+}
+
+.dr-prose > * + * {
+  margin-top: 1.6rem;
+}
+
+/* ---------- Eyebrow / kicker ---------- */
+
+.caption-with-letter-spacing {
+  color: rgb(var(--dr-eyebrow));
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.rich-text__caption,
+.image-with-text__caption {
+  margin-bottom: 1.2rem;
+}
+
+/* ---------- Buttons ---------- */
+
+.button,
+.shopify-challenge__button,
+.customer button {
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  font-weight: 600;
+  font-size: 1.3rem;
+  padding: 0 3.2rem;
+}
+
+/* ---------- Section rhythm ---------- */
+
+.dr-section {
+  --dr-gutter: 2rem;
+}
+
+.dr-eyebrow {
+  display: block;
+  color: rgb(var(--dr-eyebrow));
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: 0 0 1.2rem;
+}
+
+.dr-heading {
+  margin: 0 0 1.8rem;
+  text-wrap: balance;
+}
+
+.dr-measure {
+  max-width: 52ch;
+}
+
+.dr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 2.8rem;
+}
+
+/* Craft gives .button a min-width that looks heavy on stacked CTAs */
+.dr-actions .button {
+  min-width: 0;
+}
+
+@media screen and (max-width: 749px) {
+  .dr-actions .button {
+    width: 100%;
+  }
+}
+
+/* ---------- Newsletter, left-aligned variant ---------- */
+
+.newsletter--left .newsletter__wrapper {
+  text-align: left;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.newsletter--left .newsletter__subheading {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 52ch;
+}
+
+/* Field and button sit on one row, as in the comp */
+.newsletter--left .newsletter-form {
+  align-items: flex-start;
+  margin-inline: 0;
+  max-width: 68rem;
+}
+
+.newsletter--left .newsletter__wrapper .newsletter-form__field-wrapper {
+  max-width: none;
+  width: 100%;
+}
+
+.newsletter--left .newsletter__button {
+  margin-top: 0;
+}
+
+/* Full-width newsletter still needs the page gutter */
+.newsletter--left .content-container--full-width {
+  padding-left: 5rem;
+  padding-right: 5rem;
+}
+
+@media screen and (max-width: 749px) {
+  .newsletter--left .content-container--full-width {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+
+/* ==========================================================================
+   Coverage calculator (global: used inline and inside the pop-up)
+   ========================================================================== */
+
+  .dr-calc__intro {
+    margin-bottom: 4rem;
+  }
+
+  .dr-calc__text {
+    max-width: 52ch;
+  }
+
+  .dr-calc__app {
+    display: block;
+  }
+
+  .dr-calc__panel {
+    background-color: rgb(var(--dr-offwhite));
+    border: 1px solid var(--dr-rule);
+    padding: 3.2rem;
+  }
+
+  .dr-calc__group {
+    border: 0;
+    margin: 0 0 3.2rem;
+    padding: 0;
+  }
+
+  .dr-calc__group:last-child {
+    margin-bottom: 0;
+  }
+
+  .dr-calc__label {
+    display: block;
+    padding: 0;
+    margin: 0 0 1.6rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  .dr-calc__sublabel {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  /* Wall rows */
+  .dr-calc__wall {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+    padding-bottom: 2rem;
+  }
+
+  .dr-calc__wall + .dr-calc__wall {
+    border-top: 1px solid var(--dr-rule);
+    padding-top: 2rem;
+  }
+
+  .dr-calc__inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .dr-calc__field {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .dr-calc__input {
+    width: 100%;
+    min-height: 4.8rem;
+    padding: 0 1.4rem;
+    font-size: 1.6rem;
+    font-family: inherit;
+    color: rgb(var(--color-foreground));
+    background-color: rgb(var(--dr-offwhite));
+    border: 1px solid rgba(var(--color-foreground), 0.3);
+    border-radius: var(--inputs-radius, 4px);
+    -moz-appearance: textfield;
+  }
+
+  .dr-calc__input::-webkit-outer-spin-button,
+  .dr-calc__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .dr-calc__input:focus-visible {
+    outline: 0.2rem solid rgb(var(--dr-clay));
+    outline-offset: 0.1rem;
+  }
+
+  .dr-calc__unit {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  .dr-calc__remove {
+    justify-self: start;
+    background: none;
+    border: 0;
+    padding: 0.4rem;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    color: rgba(var(--color-foreground), 0.55);
+  }
+
+  .dr-calc__add {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin-top: 0.4rem;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--dr-rust));
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* Segmented controls */
+  .dr-calc__segments {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    border: 1px solid rgba(var(--color-foreground), 0.3);
+    border-radius: var(--inputs-radius, 4px);
+    overflow: hidden;
+  }
+
+  .dr-calc__segment {
+    position: relative;
+    margin: 0;
+  }
+
+  .dr-calc__segment + .dr-calc__segment {
+    border-left: 1px solid rgba(var(--color-foreground), 0.3);
+  }
+
+  .dr-calc__segment input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .dr-calc__segment span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 4.8rem;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .dr-calc__segment input:checked + span {
+    background-color: rgb(var(--dr-ink));
+    color: rgb(var(--dr-bone));
+  }
+
+  .dr-calc__segment input:focus-visible + span {
+    outline: 0.2rem solid rgb(var(--dr-clay));
+    outline-offset: -0.3rem;
+  }
+
+  /* Results panel */
+  .dr-calc__results {
+    background-color: rgb(var(--dr-ink));
+    color: rgb(var(--dr-bone));
+    padding: 3.2rem;
+  }
+
+  .dr-calc__label--onDark {
+    color: rgba(var(--dr-bone), 0.62);
+  }
+
+  .dr-calc__label--accent {
+    color: rgb(var(--dr-taupe));
+  }
+
+  .dr-calc__result-head {
+    padding-bottom: 2.4rem;
+    margin-bottom: 2.4rem;
+    border-bottom: 1px solid rgba(var(--dr-bone), 0.16);
+  }
+
+  .dr-calc__figure {
+    margin: 0;
+    font-family: var(--font-heading-family);
+    font-size: 3.2rem;
+    line-height: 1.1;
+    color: rgb(var(--dr-bone));
+  }
+
+  .dr-calc__note {
+    margin: 1rem 0 0;
+    font-size: 1.3rem;
+    color: rgba(var(--dr-bone), 0.62);
+  }
+
+  .dr-calc__rows {
+    margin: 0 0 2.8rem;
+  }
+
+  .dr-calc__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.3rem 0;
+    border-bottom: 1px solid rgba(var(--dr-bone), 0.16);
+  }
+
+  .dr-calc__row dt {
+    color: rgba(var(--dr-bone), 0.72);
+    font-size: 1.5rem;
+  }
+
+  .dr-calc__row dd {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: right;
+  }
+
+  .dr-calc__submit {
+    width: 100%;
+  }
+
+  .dr-calc__submit[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .dr-calc__unavailable {
+    margin: 1.2rem 0 0;
+    font-size: 1.3rem;
+    color: rgb(var(--dr-taupe));
+  }
+
+  .dr-calc__footnote {
+    margin-top: 1.6rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .dr-calc__wall {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .dr-calc__app {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      align-items: start;
+    }
+
+    .dr-calc__panel,
+    .dr-calc__results {
+      padding: 4rem;
+    }
+  }
+
+
+/* ==========================================================================
+   Ordering calculator — pop-up shell
+   ========================================================================== */
+
+.dr-modal {
+  border: 0;
+  padding: 0;
+  width: min(112rem, calc(100vw - 3rem));
+  max-width: none;
+  max-height: calc(100vh - 3rem);
+  background: transparent;
+  overflow: visible;
+}
+
+.dr-modal::backdrop {
+  background: rgba(30, 27, 24, 0.72);
+}
+
+.dr-modal__inner {
+  position: relative;
+  background-color: rgb(var(--dr-bone));
+  color: rgb(var(--color-foreground));
+  padding: 3.2rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+
+.dr-modal__head {
+  margin-bottom: 3.2rem;
+  padding-right: 4rem;
+}
+
+.dr-modal__head .dr-heading {
+  margin-bottom: 1.2rem;
+}
+
+.dr-modal__close {
+  position: absolute;
+  top: 1.6rem;
+  right: 1.6rem;
+  z-index: 2;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: rgb(var(--color-foreground));
+}
+
+.dr-modal__close svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.dr-modal__close:focus-visible {
+  outline: 0.2rem solid rgb(var(--dr-clay));
+}
+
+/* Lock the page behind an open dialog */
+body.dr-modal-open {
+  overflow: hidden;
+}
+
+@media screen and (min-width: 990px) {
+  .dr-modal__inner {
+    padding: 4.8rem;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .dr-modal {
+    width: 100vw;
+    max-height: 100vh;
+  }
+
+  .dr-modal__inner {
+    padding: 2.4rem 1.6rem;
+    max-height: 100vh;
+    min-height: 100vh;
+  }
+}

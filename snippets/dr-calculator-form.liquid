@@ -1,0 +1,164 @@
+{%- comment -%}
+  Coverage calculator form. Shared by the homepage section and the global
+  pop-up, so the two can never drift apart.
+
+  Accepts:
+    uid              unique suffix for radio group names (required)
+    coverage         square feet per box
+    unit             'per_box' | 'per_sqft'
+    options_json     pre-built JSON array of installation options
+    walls_label, add_wall_label, waste_label, waste_options, waste_default,
+    recommended_label, install_label, recommend_label, row_area_label,
+    row_coverage_label, row_cost_label, submit_label, unavailable_text, footnote
+{%- endcomment -%}
+
+{%- liquid
+  assign uid = uid | default: 'dr'
+  assign coverage = coverage | default: 10
+  assign unit = unit | default: 'per_box'
+  assign walls_label = walls_label | default: 'Your wall'
+  assign add_wall_label = add_wall_label | default: 'Add another wall'
+  assign waste_label = waste_label | default: 'Waste allowance'
+  assign waste_options = waste_options | default: '5, 10, 15'
+  assign waste_default = waste_default | default: '10'
+  assign recommended_label = recommended_label | default: 'Recommended'
+  assign install_label = install_label | default: 'Installation'
+  assign recommend_label = recommend_label | default: 'We recommend'
+  assign row_area_label = row_area_label | default: 'Approximately'
+  assign row_coverage_label = row_coverage_label | default: 'Coverage purchased'
+  assign row_cost_label = row_cost_label | default: 'Estimated product cost'
+  assign submit_label = submit_label | default: 'Shop for this project'
+  assign unavailable_text = unavailable_text | default: 'This option is currently unavailable.'
+-%}
+
+<dr-coverage-calculator
+  class="dr-calc__app"
+  data-uid="{{ uid }}"
+  data-coverage-per-box="{{ coverage }}"
+  data-pricing-unit="{{ unit }}"
+  data-currency="{{ cart.currency.iso_code }}"
+>
+  <script type="application/json" data-dr-options>
+    {{ options_json }}
+  </script>
+
+  <div class="dr-calc__panel">
+    <fieldset class="dr-calc__group">
+      <legend class="dr-calc__label">{{ walls_label | escape }}</legend>
+
+      <div class="dr-calc__walls" data-walls>
+        {%- comment -%} The first wall row is server-rendered; JS clones it. {%- endcomment -%}
+        <div class="dr-calc__wall" data-wall>
+          <div class="dr-calc__dim">
+            <span class="dr-calc__sublabel">Width</span>
+            <div class="dr-calc__inputs">
+              <label class="dr-calc__field">
+                <span class="visually-hidden">Wall width, feet</span>
+                <input class="dr-calc__input" type="number" inputmode="numeric" min="0" step="1" placeholder="0" data-width-ft>
+              </label>
+              <span class="dr-calc__unit" aria-hidden="true">ft</span>
+              <label class="dr-calc__field">
+                <span class="visually-hidden">Wall width, inches</span>
+                <input class="dr-calc__input" type="number" inputmode="numeric" min="0" max="11" step="1" placeholder="0" data-width-in>
+              </label>
+              <span class="dr-calc__unit" aria-hidden="true">in</span>
+            </div>
+          </div>
+
+          <div class="dr-calc__dim">
+            <span class="dr-calc__sublabel">Height</span>
+            <div class="dr-calc__inputs">
+              <label class="dr-calc__field">
+                <span class="visually-hidden">Wall height, feet</span>
+                <input class="dr-calc__input" type="number" inputmode="numeric" min="0" step="1" placeholder="0" data-height-ft>
+              </label>
+              <span class="dr-calc__unit" aria-hidden="true">ft</span>
+              <label class="dr-calc__field">
+                <span class="visually-hidden">Wall height, inches</span>
+                <input class="dr-calc__input" type="number" inputmode="numeric" min="0" max="11" step="1" placeholder="0" data-height-in>
+              </label>
+              <span class="dr-calc__unit" aria-hidden="true">in</span>
+            </div>
+          </div>
+
+          <button class="dr-calc__remove" type="button" data-remove-wall hidden>
+            <span class="visually-hidden">Remove this wall</span>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="dr-calc__add" type="button" data-add-wall>+ {{ add_wall_label | escape }}</button>
+    </fieldset>
+
+    <fieldset class="dr-calc__group">
+      <legend class="dr-calc__label">{{ waste_label | escape }}</legend>
+      <div class="dr-calc__segments" data-waste-group>
+        {%- assign waste_values = waste_options | split: ',' -%}
+        {%- for value in waste_values -%}
+          {%- assign clean = value | strip -%}
+          <label class="dr-calc__segment">
+            <input
+              type="radio"
+              name="dr-waste-{{ uid }}"
+              value="{{ clean }}"
+              data-waste
+              {% if clean == waste_default %}checked{% endif %}
+            >
+            <span>
+              {{ clean }}%{% if clean == waste_default %} · {{ recommended_label | escape }}{% endif %}
+            </span>
+          </label>
+        {%- endfor -%}
+      </div>
+    </fieldset>
+
+    <fieldset class="dr-calc__group" data-install-fieldset>
+      <legend class="dr-calc__label">{{ install_label | escape }}</legend>
+      <div class="dr-calc__segments" data-install-group>
+        {%- comment -%} Segments are built by JS from the options JSON above. {%- endcomment -%}
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="dr-calc__results color-scheme-3">
+    <div class="dr-calc__result-head">
+      <p class="dr-calc__label dr-calc__label--onDark">{{ walls_label | escape }}</p>
+      <p class="dr-calc__figure" data-total-area>&mdash;</p>
+    </div>
+
+    <div class="dr-calc__result-head">
+      <p class="dr-calc__label dr-calc__label--accent">{{ recommend_label | escape }}</p>
+      <p class="dr-calc__figure" data-boxes>&mdash;</p>
+      <p class="dr-calc__note" data-waste-note></p>
+    </div>
+
+    <dl class="dr-calc__rows">
+      <div class="dr-calc__row">
+        <dt>{{ row_area_label | escape }}</dt>
+        <dd data-area-with-waste>&mdash;</dd>
+      </div>
+      <div class="dr-calc__row">
+        <dt>{{ row_coverage_label | escape }}</dt>
+        <dd data-coverage-purchased>&mdash;</dd>
+      </div>
+      <div class="dr-calc__row">
+        <dt>{{ row_cost_label | escape }}</dt>
+        <dd data-cost>&mdash;</dd>
+      </div>
+    </dl>
+
+    <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" data-cart-form>
+      <input type="hidden" name="id" value="" data-variant-id>
+      <input type="hidden" name="quantity" value="1" data-quantity>
+      <button class="button button--primary dr-calc__submit" type="submit" data-submit disabled>
+        {{ submit_label | escape }}
+      </button>
+      <p class="dr-calc__unavailable" data-unavailable hidden>{{ unavailable_text | escape }}</p>
+    </form>
+
+    {%- if footnote != blank -%}
+      <p class="dr-calc__note dr-calc__footnote">{{ footnote | escape }}</p>
+    {%- endif -%}
+  </div>
+</dr-coverage-calculator>

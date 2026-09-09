@@ -1,0 +1,325 @@
+{%- liquid
+  assign product = section.settings.product
+-%}
+
+{%- capture options_json -%}
+[
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign vid = ''
+      assign vprice = 0
+      assign vavail = false
+      if product != blank and block.settings.variant_title != blank
+        for variant in product.variants
+          if variant.title == block.settings.variant_title
+            assign vid = variant.id
+            assign vprice = variant.price
+            assign vavail = variant.available
+            break
+          endif
+        endfor
+      endif
+    -%}
+    {
+      "id": {{ block.id | json }},
+      "label": {{ block.settings.label | json }},
+      "variantId": {{ vid | json }},
+      "price": {{ vprice | json }},
+      "available": {{ vavail | json }}
+    }{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+]
+{%- endcapture -%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-calc {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .dr-calc {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="dr-calc color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="dr-calc__intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="dr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="dr-heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="dr-prose dr-calc__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+    </div>
+
+    {% render 'dr-calculator-form',
+      uid: section.id,
+      coverage: section.settings.coverage_per_box,
+      unit: section.settings.pricing_unit,
+      options_json: options_json,
+      walls_label: section.settings.walls_label,
+      add_wall_label: section.settings.add_wall_label,
+      waste_label: section.settings.waste_label,
+      waste_options: section.settings.waste_options,
+      waste_default: section.settings.waste_default,
+      recommended_label: section.settings.recommended_label,
+      install_label: section.settings.install_label,
+      recommend_label: section.settings.recommend_label,
+      row_area_label: section.settings.row_area_label,
+      row_coverage_label: section.settings.row_coverage_label,
+      row_cost_label: section.settings.row_cost_label,
+      submit_label: section.settings.submit_label,
+      unavailable_text: section.settings.unavailable_text,
+      footnote: section.settings.footnote
+    %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "DR — Coverage calculator",
+  "tag": "section",
+  "class": "section dr-section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Installation options below resolve to this product's variants for live pricing and add-to-cart."
+    },
+    {
+      "type": "range",
+      "id": "coverage_per_box",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "unit": "ft",
+      "label": "Coverage per box (sq ft)",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "pricing_unit",
+      "options": [
+        {
+          "value": "per_box",
+          "label": "Variant is priced per box"
+        },
+        {
+          "value": "per_sqft",
+          "label": "Variant is priced per square foot"
+        }
+      ],
+      "default": "per_sqft",
+      "label": "Variant pricing unit",
+      "info": "Determines the quantity added to cart: boxes, or square feet purchased."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Coverage calculator"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How much wood do you need?"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Medium"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h0",
+          "label": "Extra large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Enter your wall. We'll handle square footage, waste and boxes.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "walls_label",
+      "label": "Walls label",
+      "default": "Your wall"
+    },
+    {
+      "type": "text",
+      "id": "add_wall_label",
+      "label": "Add wall label",
+      "default": "Add another wall"
+    },
+    {
+      "type": "text",
+      "id": "waste_label",
+      "label": "Waste label",
+      "default": "Waste allowance"
+    },
+    {
+      "type": "text",
+      "id": "waste_options",
+      "label": "Waste options",
+      "default": "5, 10, 15",
+      "info": "Comma-separated percentages."
+    },
+    {
+      "type": "text",
+      "id": "waste_default",
+      "label": "Recommended waste option",
+      "default": "10"
+    },
+    {
+      "type": "text",
+      "id": "recommended_label",
+      "label": "Recommended tag",
+      "default": "Recommended"
+    },
+    {
+      "type": "text",
+      "id": "install_label",
+      "label": "Installation label",
+      "default": "Installation"
+    },
+    {
+      "type": "text",
+      "id": "recommend_label",
+      "label": "Recommendation label",
+      "default": "We recommend"
+    },
+    {
+      "type": "text",
+      "id": "row_area_label",
+      "label": "Area row label",
+      "default": "Approximately"
+    },
+    {
+      "type": "text",
+      "id": "row_coverage_label",
+      "label": "Coverage row label",
+      "default": "Coverage purchased"
+    },
+    {
+      "type": "text",
+      "id": "row_cost_label",
+      "label": "Cost row label",
+      "default": "Estimated product cost"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit label",
+      "default": "Shop for this project"
+    },
+    {
+      "type": "text",
+      "id": "unavailable_text",
+      "label": "Unavailable message",
+      "default": "This option is currently unavailable."
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "Footnote",
+      "default": "Shipping and tax calculated at checkout. Wood ships parcel or freight depending on quantity."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "install_option",
+      "name": "Installation option",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Peel & stick"
+        },
+        {
+          "type": "text",
+          "id": "variant_title",
+          "label": "Variant name",
+          "info": "Must match a variant name on the product above exactly."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Coverage calculator",
+      "blocks": [
+        {
+          "type": "install_option"
+        },
+        {
+          "type": "install_option"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

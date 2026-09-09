@@ -1,0 +1,300 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-peel {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .dr-peel {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+      --dr-peel-offset: {{ section.settings.image_offset }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="dr-peel color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.image_1 != blank or section.settings.image_2 != blank -%}
+      <div class="dr-peel__media">
+        {%- if section.settings.image_1 != blank -%}
+          <div class="dr-peel__frame">
+            {{
+              section.settings.image_1
+              | image_url: width: 1400
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 750px) 45vw, 100vw',
+                widths: '550, 750, 1100, 1400',
+                class: 'dr-peel__image'
+            }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.image_2 != blank -%}
+          <div class="dr-peel__frame dr-peel__frame--offset">
+            {{
+              section.settings.image_2
+              | image_url: width: 1400
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 750px) 45vw, 100vw',
+                widths: '550, 750, 1100, 1400',
+                class: 'dr-peel__image'
+            }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="dr-peel__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="dr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="dr-heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape | newline_to_br }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.text != blank -%}
+        <div class="dr-prose dr-peel__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="dr-peel__steps" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.text != blank -%}
+              <li class="dr-peel__step" {{ block.shopify_attributes }}>
+                {{- block.settings.text | escape -}}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="dr-actions">
+          <a
+            {% if section.settings.button_link == blank %}
+              role="link" aria-disabled="true"
+            {% else %}
+              href="{{ section.settings.button_link }}"
+            {% endif %}
+            class="button button--primary"
+          >
+            {{- section.settings.button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .dr-peel__media {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 5.6rem;
+  }
+
+  .dr-peel__frame {
+    overflow: hidden;
+    background-color: rgb(var(--dr-greige));
+  }
+
+  .dr-peel__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .dr-peel__text {
+    max-width: 52ch;
+  }
+
+  /* The three-beat rhythm from the comp: PEEL IT. PLACE IT. PRESS IT. */
+  .dr-peel__steps {
+    list-style: none;
+    margin: 3.2rem 0 0;
+    padding: 0;
+  }
+
+  .dr-peel__step {
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    padding: 0.6rem 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .dr-peel__media {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 3rem;
+      align-items: start;
+      margin-bottom: calc(5.6rem + var(--dr-peel-offset, 80px));
+    }
+
+    /* Second image drops below the first, as in the comp */
+    .dr-peel__frame--offset {
+      transform: translateY(var(--dr-peel-offset, 80px));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "DR — Peel & stick",
+  "tag": "section",
+  "class": "section dr-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "First image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Second image"
+    },
+    {
+      "type": "range",
+      "id": "image_offset",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Second image offset",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Peel & stick"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Real wood.\nRidiculously easy."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Medium"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h0",
+          "label": "Extra large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>All the character of authentic reclaimed wood without turning your weekend project into a construction project.</p><p>Our Peel &amp; Stick collection arrives prepared with professional adhesive backing.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label",
+      "default": "Shop peel & stick"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step line",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Peel it."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Peel & stick",
+      "blocks": [
+        {
+          "type": "step"
+        },
+        {
+          "type": "step"
+        },
+        {
+          "type": "step"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,335 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-process {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .dr-process {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+      --dr-process-columns: {{ section.settings.columns_desktop }};
+    }
+  }
+{%- endstyle -%}
+
+<div class="dr-process color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="dr-process__intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="dr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="dr-heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape | newline_to_br }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <ol class="dr-process__list" role="list">
+        {%- for block in section.blocks -%}
+          <li
+            class="dr-process__step{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {{ block.shopify_attributes }}
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            <div class="dr-process__icon" aria-hidden="true">
+              {%- if block.settings.image != blank -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 160
+                  | image_tag: loading: 'lazy', widths: '80, 160', alt: ''
+                }}
+              {%- else -%}
+                {%- case block.settings.icon -%}
+                  {%- when 'fence' -%}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25">
+                      <path d="M6 14h36M6 26h36" />
+                      <path d="M9 8v32M16.2 8v32M23.4 8v32M30.6 8v32M37.8 8v32" />
+                    </svg>
+                  {%- when 'plank' -%}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25">
+                      <path d="M4 30h40l-4-8H8l-4 8Z" />
+                      <path d="M18 22v-4a6 6 0 0 1 12 0v4" />
+                      <path d="M4 34h40" />
+                    </svg>
+                  {%- when 'peel' -%}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25">
+                      <path d="M8 8h32v32H8z" />
+                      <path d="M8 8c14 3 22 11 25 25" stroke-linecap="round" />
+                    </svg>
+                  {%- when 'grid' -%}
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25">
+                      <path d="M8 8h32v32H8z" />
+                      <path d="M18.7 8v32M29.3 8v32M8 18.7h32M8 29.3h32" />
+                    </svg>
+                {%- endcase -%}
+              {%- endif -%}
+            </div>
+
+            <div class="dr-process__rule" aria-hidden="true"></div>
+
+            <p class="dr-process__number">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</p>
+
+            {%- if block.settings.heading != blank -%}
+              <h3 class="dr-process__heading h4">{{ block.settings.heading | escape }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="dr-process__text dr-prose">{{ block.settings.text }}</div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="dr-actions dr-process__actions">
+        <a
+          {% if section.settings.button_link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ section.settings.button_link }}"
+          {% endif %}
+          class="button button--secondary"
+        >
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .dr-process__intro {
+    margin-bottom: 5.6rem;
+  }
+
+  .dr-process__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--dr-process-columns, 1), minmax(0, 1fr));
+    column-gap: 4rem;
+    row-gap: 5.6rem;
+  }
+
+  @media screen and (max-width: 749px) {
+    .dr-process__list {
+      --dr-process-columns: 1;
+      row-gap: 4rem;
+    }
+  }
+
+  .dr-process__icon {
+    height: 4.4rem;
+    margin-bottom: 2rem;
+    color: rgba(var(--color-foreground), 0.72);
+  }
+
+  .dr-process__icon svg,
+  .dr-process__icon img {
+    height: 100%;
+    width: auto;
+    display: block;
+  }
+
+  .dr-process__rule {
+    height: 1px;
+    background: var(--dr-rule);
+    margin-bottom: 1.8rem;
+  }
+
+  .dr-process__number {
+    margin: 0 0 0.8rem;
+    color: rgb(var(--dr-eyebrow));
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+  }
+
+  .dr-process__heading {
+    margin: 0 0 1rem;
+  }
+
+  .dr-process__text {
+    margin: 0;
+    max-width: 40ch;
+  }
+
+  .dr-process__actions {
+    margin-top: 5.6rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "DR — Process",
+  "tag": "section",
+  "class": "section dr-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "How it works"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Old fence.\nNew wall."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Medium"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h0",
+          "label": "Extra large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label",
+      "default": "See the whole process"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "options": [
+            {
+              "value": "fence",
+              "label": "Fence"
+            },
+            {
+              "value": "plank",
+              "label": "Plank / mill"
+            },
+            {
+              "value": "peel",
+              "label": "Peel"
+            },
+            {
+              "value": "grid",
+              "label": "Wall grid"
+            }
+          ],
+          "default": "fence",
+          "label": "Icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom icon",
+          "info": "Overrides the icon above."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Reclaim"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>We rescue naturally weathered wood from old fences, barns and structures.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Process",
+      "blocks": [
+        {
+          "type": "step"
+        },
+        {
+          "type": "step"
+        },
+        {
+          "type": "step"
+        },
+        {
+          "type": "step"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
