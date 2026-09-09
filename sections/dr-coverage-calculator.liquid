@@ -6,11 +6,17 @@
 [
   {%- for block in section.blocks -%}
     {%- liquid
+      # An option may name its own product; otherwise it uses the section's.
+      assign source = block.settings.product
+      if source == blank
+        assign source = product
+      endif
+
       assign vid = ''
       assign vprice = 0
       assign vavail = false
-      if product != blank and block.settings.variant_title != blank
-        for variant in product.variants
+      if source != blank and block.settings.variant_title != blank
+        for variant in source.variants
           if variant.title == block.settings.variant_title
             assign vid = variant.id
             assign vprice = variant.price
@@ -19,12 +25,18 @@
           endif
         endfor
       endif
+
+      assign cov = block.settings.coverage
+      if cov == 0
+        assign cov = section.settings.coverage_per_box
+      endif
     -%}
     {
       "id": {{ block.id | json }},
       "label": {{ block.settings.label | json }},
       "variantId": {{ vid | json }},
       "price": {{ vprice | json }},
+      "coverage": {{ cov | json }},
       "available": {{ vavail | json }}
     }{%- unless forloop.last -%},{%- endunless -%}
   {%- endfor -%}
@@ -304,6 +316,23 @@
           "id": "variant_title",
           "label": "Variant name",
           "info": "Must match a variant name on the product above exactly."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Optional. Use when this option is a different product, such as a specialty cut."
+        },
+        {
+          "type": "range",
+          "id": "coverage",
+          "min": 0,
+          "max": 60,
+          "step": 1,
+          "unit": "ft",
+          "label": "Coverage per box (sq ft)",
+          "default": 0,
+          "info": "0 uses the section value above. Set it when this option ships a different box size."
         }
       ]
     }

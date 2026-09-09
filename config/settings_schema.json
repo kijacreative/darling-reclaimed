@@ -1505,8 +1505,25 @@
         "type": "text",
         "id": "calc_option_1_variant",
         "label": "Variant name",
-        "default": "Peel & Stick",
-        "info": "Must match a variant name on the product exactly."
+        "info": "Must match a variant on the product exactly.",
+        "default": "Peel & Stick"
+      },
+      {
+        "type": "product",
+        "id": "calc_option_1_product",
+        "label": "Product",
+        "info": "Optional. Leave empty to use the main product above."
+      },
+      {
+        "type": "range",
+        "id": "calc_option_1_coverage",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "ft",
+        "label": "Coverage per box (sq ft)",
+        "default": 0,
+        "info": "0 uses the main coverage value."
       },
       {
         "type": "header",
@@ -1522,8 +1539,57 @@
         "type": "text",
         "id": "calc_option_2_variant",
         "label": "Variant name",
-        "default": "Nail-Up",
-        "info": "Must match a variant name on the product exactly."
+        "info": "Must match a variant on the product exactly.",
+        "default": "Nail-Up"
+      },
+      {
+        "type": "product",
+        "id": "calc_option_2_product",
+        "label": "Product",
+        "info": "Optional. Leave empty to use the main product above."
+      },
+      {
+        "type": "range",
+        "id": "calc_option_2_coverage",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "ft",
+        "label": "Coverage per box (sq ft)",
+        "default": 0,
+        "info": "0 uses the main coverage value."
+      },
+      {
+        "type": "header",
+        "content": "Installation option 3"
+      },
+      {
+        "type": "text",
+        "id": "calc_option_3_label",
+        "label": "Label"
+      },
+      {
+        "type": "text",
+        "id": "calc_option_3_variant",
+        "label": "Variant name",
+        "info": "Must match a variant on the product exactly."
+      },
+      {
+        "type": "product",
+        "id": "calc_option_3_product",
+        "label": "Product",
+        "info": "Optional. Leave empty to use the main product above."
+      },
+      {
+        "type": "range",
+        "id": "calc_option_3_coverage",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "ft",
+        "label": "Coverage per box (sq ft)",
+        "default": 0,
+        "info": "0 uses the main coverage value."
       },
       {
         "type": "header",

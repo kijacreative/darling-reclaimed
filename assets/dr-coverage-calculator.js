@@ -65,6 +65,8 @@ class DRCoverageCalculator extends HTMLElement {
         label: row.label || '',
         variantId: row.variantId ? String(row.variantId) : '',
         price: parseInt(row.price, 10) || 0,
+        /* An option may ship a different box size than the section default */
+        coverage: parseFloat(row.coverage) || 0,
         available: row.available === true,
       };
     });
@@ -206,8 +208,9 @@ class DRCoverageCalculator extends HTMLElement {
     }
 
     const areaWithWaste = area * (1 + wastePct / 100);
-    const boxes = Math.max(1, Math.ceil(areaWithWaste / this.coveragePerBox));
-    const coveragePurchased = boxes * this.coveragePerBox;
+    const perBox = (option && option.coverage) || this.coveragePerBox;
+    const boxes = Math.max(1, Math.ceil(areaWithWaste / perBox));
+    const coveragePurchased = boxes * perBox;
 
     const quantity = this.pricingUnit === 'per_sqft' ? Math.ceil(coveragePurchased) : boxes;
     const cost = option ? option.price * quantity : 0;

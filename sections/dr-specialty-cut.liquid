@@ -1,0 +1,511 @@
+{%- liquid
+  assign product = section.settings.product
+
+  assign heading = section.settings.heading
+  if heading == blank and product != blank
+    assign heading = product.title
+  endif
+
+  assign body = section.settings.text
+  if body == blank and product != blank
+    assign body = product.description
+  endif
+
+  assign install = section.settings.install_image
+  if install == blank and product != blank
+    assign install = product.featured_image
+  endif
+
+  assign shop_url = section.settings.button_link
+  if shop_url == blank and product != blank
+    assign shop_url = product.url
+  endif
+
+  assign overlap = section.settings.swatch_overlap
+  if section.settings.swatch_image == blank or install == blank
+    assign overlap = false
+  endif
+-%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .dr-cut {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  #shopify-section-{{ section.id }} .dr-cut__install {
+    padding-bottom: {{ 10000 | divided_by: section.settings.install_ratio }}%;
+  }
+
+  #shopify-section-{{ section.id }} .dr-cut__swatch {
+    width: {{ section.settings.swatch_width }}%;
+  }
+
+  @media screen and (min-width: 990px) {
+    #shopify-section-{{ section.id }} .dr-cut {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="dr-cut color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="dr-cut__layout dr-cut__layout--{{ section.settings.media_position }}">
+      {%- if install != blank or section.settings.swatch_image != blank -%}
+        <div class="dr-cut__media{% if overlap %} dr-cut__media--overlap{% endif %}">
+          {%- if install != blank -%}
+            <div class="dr-cut__install">
+              {{
+                install
+                | image_url: width: 2400
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 990px) 50vw, 100vw',
+                  widths: '550, 750, 1100, 1500, 2000, 2400',
+                  class: 'dr-cut__install-image'
+              }}
+              {%- if section.settings.badge != blank -%}
+                <span class="dr-cut__badge">{{ section.settings.badge | escape }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- comment -%}
+            The swatch is a cut-out of the pattern itself, so it is contained
+            rather than cropped and sits on the section background.
+          {%- endcomment -%}
+          {%- if section.settings.swatch_image != blank -%}
+            <div class="dr-cut__swatch">
+              {{
+                section.settings.swatch_image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 990px) 25vw, 50vw',
+                  widths: '300, 500, 750, 1200',
+                  class: 'dr-cut__swatch-image'
+              }}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="dr-cut__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="dr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+
+        {%- if heading != blank -%}
+          <h2 class="dr-heading {{ section.settings.heading_size }}">
+            {{- heading | escape | newline_to_br -}}
+          </h2>
+        {%- endif -%}
+
+        {%- if body != blank -%}
+          <div class="dr-prose dr-cut__text">{{ body }}</div>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <dl class="dr-cut__specs">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign value = block.settings.value
+
+                # A named variant shows its live price instead of the typed value
+                if block.settings.variant_title != blank and product != blank
+                  for variant in product.variants
+                    if variant.title == block.settings.variant_title
+                      assign price = variant.price | money
+                      if block.settings.unit_suffix != blank
+                        assign value = price | append: ' ' | append: block.settings.unit_suffix
+                      else
+                        assign value = price
+                      endif
+                      break
+                    endif
+                  endfor
+                endif
+              -%}
+              {%- if block.settings.label != blank and value != blank -%}
+                <div class="dr-cut__spec" {{ block.shopify_attributes }}>
+                  <dt class="dr-cut__spec-label">{{ block.settings.label | escape }}</dt>
+                  <dd class="dr-cut__spec-value">{{ value }}</dd>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </dl>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+          <div class="dr-actions">
+            {%- if section.settings.button_label != blank -%}
+              <a
+                {% if shop_url == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ shop_url }}"
+                {% endif %}
+                class="button button--primary"
+              >
+                {{- section.settings.button_label | escape -}}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.button_label_2 != blank -%}
+              <a
+                {% if section.settings.button_link_2 == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ section.settings.button_link_2 }}"
+                {% endif %}
+                class="button button--secondary"
+              >
+                {{- section.settings.button_label_2 | escape -}}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .dr-cut__layout {
+    display: grid;
+    gap: 4rem;
+  }
+
+  .dr-cut__media {
+    position: relative;
+  }
+
+  .dr-cut__install {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 77%;
+    background-color: rgb(221, 212, 202);
+  }
+
+  .dr-cut__install-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .dr-cut__badge {
+    position: absolute;
+    top: 1.6rem;
+    left: 1.6rem;
+    background-color: rgb(255, 253, 249);
+    color: rgb(43, 39, 35);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.7rem 1.2rem;
+  }
+
+  /*
+    Contained, never cropped — the swatch is the product shape itself.
+    A transparent PNG sits straight on the section background.
+  */
+  .dr-cut__swatch {
+    width: 42%;
+    margin: 2rem auto 0;
+  }
+
+  .dr-cut__swatch-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 1.2rem 2.4rem rgba(30, 27, 24, 0.22));
+  }
+
+  .dr-cut__text {
+    max-width: 52ch;
+  }
+
+  .dr-cut__specs {
+    margin: 3.2rem 0 0;
+    max-width: 46rem;
+  }
+
+  .dr-cut__spec {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.3rem 0;
+    border-bottom: 1px solid var(--dr-rule);
+  }
+
+  .dr-cut__spec:first-child {
+    border-top: 1px solid var(--dr-rule);
+  }
+
+  .dr-cut__spec-label {
+    margin: 0;
+    color: rgba(var(--color-foreground), 0.62);
+    font-size: 1.5rem;
+  }
+
+  .dr-cut__spec-value {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: right;
+  }
+
+  @media screen and (min-width: 990px) {
+    .dr-cut__layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 6rem;
+    }
+
+    .dr-cut__layout--right .dr-cut__media {
+      order: 2;
+    }
+
+    /* Swatch lifts off the lower corner of the install shot */
+    .dr-cut__media--overlap {
+      padding-bottom: 6rem;
+    }
+
+    .dr-cut__media--overlap .dr-cut__swatch {
+      position: absolute;
+      left: -3rem;
+      bottom: 0;
+      margin: 0;
+      z-index: 1;
+    }
+
+    .dr-cut__layout--right .dr-cut__media--overlap .dr-cut__swatch {
+      left: auto;
+      right: -3rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "DR — Specialty cut",
+  "tag": "section",
+  "class": "section dr-section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Supplies the title, description, link and live variant pricing when the fields below are left empty."
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "install_image",
+      "label": "Installed image",
+      "info": "The room shot. Defaults to the product's featured image."
+    },
+    {
+      "type": "range",
+      "id": "install_ratio",
+      "min": 60,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "label": "Installed image width as % of height",
+      "default": 130
+    },
+    {
+      "type": "image_picker",
+      "id": "swatch_image",
+      "label": "Pattern cut-out",
+      "info": "The pattern on its own. Use a transparent PNG so it sits on the section background."
+    },
+    {
+      "type": "range",
+      "id": "swatch_width",
+      "min": 20,
+      "max": 70,
+      "step": 2,
+      "unit": "%",
+      "label": "Cut-out width",
+      "default": 42
+    },
+    {
+      "type": "checkbox",
+      "id": "swatch_overlap",
+      "label": "Overlap the installed image",
+      "default": true,
+      "info": "Desktop only. Stacks underneath on mobile."
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "default": "Specialty cut"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "options": [
+        { "value": "left", "label": "Media left" },
+        { "value": "right", "label": "Media right" }
+      ],
+      "default": "left",
+      "label": "Media position"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Specialty cut"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Chevron.\nIn original barn red.",
+      "info": "Press return for a line break. Defaults to the product title."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        { "value": "h2", "label": "Medium" },
+        { "value": "h1", "label": "Large" },
+        { "value": "h0", "label": "Extra large" }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>That red is the paint the fence wore for forty years, not a stain we brushed on afterward. We cut each board on a 45 and mirror it down the centre, so the grain runs into itself the whole height of the wall.</p><p>Sorted by tone before it ships, because a chevron only reads properly when the reds sit together.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Primary button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label",
+      "default": "Shop chevron"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link",
+      "info": "Defaults to the product page. Use #calculator to open the ordering pop-up."
+    },
+    {
+      "type": "header",
+      "content": "Secondary button"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Label",
+      "default": "Order a sample"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 112
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Spec row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Cut angle"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "45° mirrored"
+        },
+        {
+          "type": "text",
+          "id": "variant_title",
+          "label": "Variant name",
+          "info": "Optional. Must match a variant on the product exactly — its live price then replaces the value above."
+        },
+        {
+          "type": "text",
+          "id": "unit_suffix",
+          "label": "Price suffix",
+          "info": "Appended after a variant price, e.g. \"/ sq. ft.\""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "DR — Specialty cut",
+      "blocks": [
+        { "type": "spec" },
+        { "type": "spec" },
+        { "type": "spec" },
+        { "type": "spec" }
+      ]
+    }
+  ]
+}
+{% endschema %}

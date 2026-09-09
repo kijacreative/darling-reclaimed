@@ -317,11 +317,21 @@
             "label": "Nail-up",
             "variant_title": "Nail-Up"
           }
+        },
+        "chevron": {
+          "type": "install_option",
+          "settings": {
+            "label": "Chevron",
+            "variant_title": "Peel & Stick",
+            "product": "",
+            "coverage": 8
+          }
         }
       },
       "block_order": [
         "peel",
-        "nail"
+        "nail",
+        "chevron"
       ],
       "settings": {
         "coverage_per_box": 10,
@@ -540,12 +550,80 @@
         "padding_bottom": 88,
         "content_alignment": "left"
       }
+    },
+    "specialty_cut": {
+      "type": "dr-specialty-cut",
+      "blocks": {
+        "peel": {
+          "type": "spec",
+          "settings": {
+            "label": "Peel & Stick",
+            "value": "$14.00 / sq. ft.",
+            "variant_title": "Peel & Stick",
+            "unit_suffix": "/ sq. ft."
+          }
+        },
+        "nail": {
+          "type": "spec",
+          "settings": {
+            "label": "Nail-Up",
+            "value": "$14.00 / sq. ft.",
+            "variant_title": "Nail-Up",
+            "unit_suffix": "/ sq. ft."
+          }
+        },
+        "angle": {
+          "type": "spec",
+          "settings": {
+            "label": "Cut angle",
+            "value": "45° mirrored",
+            "variant_title": "",
+            "unit_suffix": ""
+          }
+        },
+        "coverage": {
+          "type": "spec",
+          "settings": {
+            "label": "Coverage per box",
+            "value": "8 sq. ft.",
+            "variant_title": "",
+            "unit_suffix": ""
+          }
+        }
+      },
+      "block_order": [
+        "peel",
+        "nail",
+        "angle",
+        "coverage"
+      ],
+      "settings": {
+        "install_image": "shopify://shop_images/dr-chevron-room.jpg",
+        "install_ratio": 130,
+        "swatch_image": "shopify://shop_images/dr-chevron-swatch.png",
+        "swatch_width": 42,
+        "swatch_overlap": true,
+        "badge": "Specialty cut",
+        "media_position": "left",
+        "eyebrow": "Specialty cut",
+        "heading": "Chevron.\nIn original barn red.",
+        "heading_size": "h1",
+        "text": "<p>That red is the paint the fence wore for forty years, not a stain we brushed on afterward. We cut each board on a 45 and mirror it down the centre, so the grain runs into itself the whole height of the wall.</p><p>Sorted by tone before it ships, because a chevron only reads properly when the reds sit together.</p>",
+        "button_label": "Shop chevron",
+        "button_link": "#calculator",
+        "button_label_2": "Order a sample",
+        "button_link_2": "#calculator",
+        "color_scheme": "scheme-2",
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
     }
   },
   "order": [
     "dr_hero",
     "paneling_intro",
     "featured_finish",
+    "specialty_cut",
     "process",
     "actually_reclaimed",
     "shop_by_space",

@@ -2,67 +2,69 @@
   Global ordering calculator, rendered once per page in theme.liquid.
   Any link to #calculator, or any element with [data-dr-calc-open], opens it.
   Configured from Theme settings → Ordering calculator.
-{%- endcomment -%}
 
-{%- liquid
-  assign product = settings.calc_product
-  assign o1 = settings.calc_option_1_variant
-  assign o2 = settings.calc_option_2_variant
--%}
+  Each installation option may name its own product, so a specialty cut sold
+  as a separate product can sit alongside the standard finishes.
+{%- endcomment -%}
 
 {%- capture options_json -%}
 [
   {%- assign wrote = false -%}
-  {%- if settings.calc_option_1_label != blank -%}
+  {%- for n in (1..3) -%}
     {%- liquid
-      assign v1id = ''
-      assign v1price = 0
-      assign v1avail = false
-      if product != blank and o1 != blank
-        for variant in product.variants
-          if variant.title == o1
-            assign v1id = variant.id
-            assign v1price = variant.price
-            assign v1avail = variant.available
+      case n
+        when 1
+          assign label = settings.calc_option_1_label
+          assign vtitle = settings.calc_option_1_variant
+          assign source = settings.calc_option_1_product
+          assign cov = settings.calc_option_1_coverage
+        when 2
+          assign label = settings.calc_option_2_label
+          assign vtitle = settings.calc_option_2_variant
+          assign source = settings.calc_option_2_product
+          assign cov = settings.calc_option_2_coverage
+        when 3
+          assign label = settings.calc_option_3_label
+          assign vtitle = settings.calc_option_3_variant
+          assign source = settings.calc_option_3_product
+          assign cov = settings.calc_option_3_coverage
+      endcase
+
+      if source == blank
+        assign source = settings.calc_product
+      endif
+
+      if cov == 0
+        assign cov = settings.calc_coverage_per_box
+      endif
+
+      assign vid = ''
+      assign vprice = 0
+      assign vavail = false
+      if source != blank and vtitle != blank
+        for variant in source.variants
+          if variant.title == vtitle
+            assign vid = variant.id
+            assign vprice = variant.price
+            assign vavail = variant.available
             break
           endif
         endfor
       endif
-      assign wrote = true
     -%}
-    {
-      "id": "opt1",
-      "label": {{ settings.calc_option_1_label | json }},
-      "variantId": {{ v1id | json }},
-      "price": {{ v1price | json }},
-      "available": {{ v1avail | json }}
-    }
-  {%- endif -%}
-  {%- if settings.calc_option_2_label != blank -%}
-    {%- liquid
-      assign v2id = ''
-      assign v2price = 0
-      assign v2avail = false
-      if product != blank and o2 != blank
-        for variant in product.variants
-          if variant.title == o2
-            assign v2id = variant.id
-            assign v2price = variant.price
-            assign v2avail = variant.available
-            break
-          endif
-        endfor
-      endif
-    -%}
-    {%- if wrote -%},{%- endif -%}
-    {
-      "id": "opt2",
-      "label": {{ settings.calc_option_2_label | json }},
-      "variantId": {{ v2id | json }},
-      "price": {{ v2price | json }},
-      "available": {{ v2avail | json }}
-    }
-  {%- endif -%}
+    {%- if label != blank -%}
+      {%- if wrote -%},{%- endif -%}
+      {
+        "id": "opt{{ n }}",
+        "label": {{ label | json }},
+        "variantId": {{ vid | json }},
+        "price": {{ vprice | json }},
+        "coverage": {{ cov | json }},
+        "available": {{ vavail | json }}
+      }
+      {%- assign wrote = true -%}
+    {%- endif -%}
+  {%- endfor -%}
 ]
 {%- endcapture -%}
 
